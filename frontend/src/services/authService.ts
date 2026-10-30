@@ -11,7 +11,7 @@ export const authService = {
     return res.data;
   },
 
-  async register(data: { fullName: string; email: string; password: string; phoneNumber?: string; role?: string }): Promise<AuthResponse> {
+  async register(data: { fullName: string; email: string; password: string; nic: string; phoneNumber?: string; role?: string }): Promise<AuthResponse> {
     const res = await api.post<AuthResponse>('/auth/register', data);
     if (res.data.token) {
       localStorage.setItem('carepoint_token', res.data.token);

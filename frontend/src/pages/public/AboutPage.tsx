@@ -6,10 +6,10 @@ export const AboutPage: React.FC = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
       {/* Header */}
       <div className="text-center max-w-3xl mx-auto space-y-3">
-        <span className="text-xs font-bold uppercase tracking-wider text-teal-700">About CarePoint</span>
-        <h1 className="text-3xl sm:text-4xl font-black text-navy-950">Delivering Exceptional Healthcare Through Digital Innovation</h1>
+        <span className="text-xs font-bold uppercase tracking-wider text-teal-700">About the Network</span>
+        <h1 className="text-3xl sm:text-4xl font-black text-navy-950">Delivering Exceptional Healthcare Across Sri Lanka</h1>
         <p className="text-sm text-slate-600 leading-relaxed">
-          Founded in 2012, CarePoint Hospital has pioneered clinical precision, patient-centered healing, and seamless digital health systems.
+          Serving the Sri Lankan community since 2012, our network of clinics and hospital partnerships have pioneered clinical precision and seamless digital health systems.
         </p>
       </div>
 
@@ -38,14 +38,14 @@ export const AboutPage: React.FC = () => {
         <div className="space-y-4">
           <h2 className="text-2xl font-black text-navy-950">Our Clinical Mission</h2>
           <p className="text-sm text-slate-600 leading-relaxed">
-            Our mission is to make first-class healthcare transparent, accessible, and dignified for every patient. By integrating digital appointment management directly with clinical scheduling, we eradicate unnecessary wait times and elevate quality of care.
+            Our mission is to make first-class healthcare transparent, accessible, and dignified for every citizen of Sri Lanka. By integrating digital appointment management directly with clinical scheduling, we eradicate unnecessary wait times and elevate quality of care.
           </p>
           <ul className="space-y-2.5 text-xs text-slate-700 font-medium pt-2">
             <li className="flex items-center gap-2">
               <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" /> Real-time reservation with database-enforced concurrency
             </li>
             <li className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" /> Secure HIPAA and data privacy compliant records
+              <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" /> Compliance with Sri Lankan medical privacy and data regulations
             </li>
             <li className="flex items-center gap-2">
               <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" /> Full transparency in physician credentials and fees

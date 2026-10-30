@@ -194,7 +194,7 @@ export const PatientSearchPage: React.FC = () => {
               type="tel"
               value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
-              placeholder="+1 (555) 000-0000"
+              placeholder="+94 77 000 0000"
               className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium"
             />
           </div>

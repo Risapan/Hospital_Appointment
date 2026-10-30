@@ -60,7 +60,7 @@ export const HomePage: React.FC = () => {
             <div className="lg:col-span-7 space-y-6">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-50 border border-teal-200/80 text-teal-800 text-xs font-bold shadow-sm">
                 <Sparkles className="w-3.5 h-3.5 text-teal-600" />
-                Trusted Digital Hospital Care & Real-Time Booking
+                Sri Lanka's Leading Digital Hospital Booking System
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-navy-950 tracking-tight leading-[1.12]">
@@ -68,7 +68,7 @@ export const HomePage: React.FC = () => {
               </h1>
 
               <p className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-2xl">
-                Discover leading medical specialists, view verified real-time slot availability, and reserve consultations in seconds with our concurrency-guaranteed booking platform.
+                Connect with the finest medical specialists across Sri Lanka's top hospitals, view verified real-time slot availability, and reserve consultations in seconds.
               </p>
 
               {/* Quick Search Bar Box */}
@@ -82,7 +82,7 @@ export const HomePage: React.FC = () => {
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search doctor name or specialty..."
+                    placeholder="Search doctors in Colombo, Kandy or Galle..."
                     className="w-full pl-10 pr-3 py-3 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-navy-900 placeholder:text-slate-400 font-medium"
                   />
                 </div>
@@ -116,10 +116,10 @@ export const HomePage: React.FC = () => {
                   <CheckCircle className="w-4 h-4 text-emerald-600" /> Instant SMS & In-app Confirmation
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4 text-teal-600" /> Board-Certified Specialists
+                  <ShieldCheck className="w-4 h-4 text-teal-600" /> Board-Certified SL Specialists
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <Clock className="w-4 h-4 text-amber-600" /> Zero Waiting Time
+                  <Clock className="w-4 h-4 text-amber-600" /> Reduced Waiting Time
                 </span>
               </div>
             </div>
@@ -286,10 +286,10 @@ export const HomePage: React.FC = () => {
             </p>
             <div className="pt-2 flex flex-wrap items-center gap-4">
               <a
-                href="tel:5559112273"
+                href="tel:1990"
                 className="bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-sm px-6 py-3 rounded-xl transition-colors shadow-lg"
               >
-                Call Emergency: (555) 911-CARE
+                Call Emergency: 1990 (Suwa Seriya)
               </a>
               <Link
                 to="/about"

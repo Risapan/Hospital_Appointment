@@ -1,0 +1,9 @@
+{
+  "name": "hospital-appointment-backend",
+  "private": true,
+  "description": "Spring Boot backend. npm is only a shortcut here; the real build tool is Maven.",
+  "scripts": {
+    "dev": "mvn spring-boot:run",
+    "test": "mvn test"
+  }
+}

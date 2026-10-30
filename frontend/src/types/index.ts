@@ -29,6 +29,8 @@ export interface Doctor {
   specialty: string;
   biography?: string;
   qualifications?: string;
+  hospitalName?: string;
+  hospitalType?: string;
   consultationDurationMinutes: number;
   consultationFee: number;
   profileImageUrl?: string;
@@ -123,6 +125,7 @@ export interface PatientProfile {
   email: string;
   phoneNumber?: string;
   role: Role;
+  nic?: string;
   gender?: string;
   dateOfBirth?: string;
   bloodGroup?: string;
