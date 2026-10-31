@@ -91,6 +91,9 @@ public class AuthController {
             throw new BadRequestException("An account with this email address already exists.");
         }
 
+        if (request.getPassword() == null || request.getPassword().isBlank()) {
+            throw new BadRequestException("Password is required");
+        }
         if (request.getNic() == null || request.getNic().isBlank()) {
             throw new BadRequestException("NIC number is required");
         }

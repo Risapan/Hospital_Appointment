@@ -1,6 +1,8 @@
 package com.hospital.appointment.dto;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DoctorDto {
     private String id; // DoctorProfile ID
@@ -13,7 +15,9 @@ public class DoctorDto {
     private String specialty;
     private String biography;
     private String qualifications;
-    private String hospitalName;
+    private List<String> hospitalIds = new ArrayList<>();
+    private List<HospitalSummary> hospitals = new ArrayList<>();
+    private String hospitalName; // all hospital names joined, for display
     private String hospitalType;
     private int consultationDurationMinutes;
     private BigDecimal consultationFee;
@@ -54,6 +58,12 @@ public class DoctorDto {
     public String getQualifications() { return qualifications; }
     public void setQualifications(String qualifications) { this.qualifications = qualifications; }
 
+    public List<String> getHospitalIds() { return hospitalIds; }
+    public void setHospitalIds(List<String> hospitalIds) { this.hospitalIds = hospitalIds; }
+
+    public List<HospitalSummary> getHospitals() { return hospitals; }
+    public void setHospitals(List<HospitalSummary> hospitals) { this.hospitals = hospitals; }
+
     public String getHospitalName() { return hospitalName; }
     public void setHospitalName(String hospitalName) { this.hospitalName = hospitalName; }
 
@@ -77,4 +87,33 @@ public class DoctorDto {
 
     public boolean isActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
+
+    /** Short hospital info shown on doctor cards and in the booking window. */
+    public static class HospitalSummary {
+        private String id;
+        private String name;
+        private String sector;
+        private String address;
+
+        public HospitalSummary() {}
+
+        public HospitalSummary(String id, String name, String sector, String address) {
+            this.id = id;
+            this.name = name;
+            this.sector = sector;
+            this.address = address;
+        }
+
+        public String getId() { return id; }
+        public void setId(String id) { this.id = id; }
+
+        public String getName() { return name; }
+        public void setName(String name) { this.name = name; }
+
+        public String getSector() { return sector; }
+        public void setSector(String sector) { this.sector = sector; }
+
+        public String getAddress() { return address; }
+        public void setAddress(String address) { this.address = address; }
+    }
 }

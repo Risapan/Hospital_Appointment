@@ -9,6 +9,7 @@ import { EmptyState } from '../../components/common/EmptyState';
 import { Modal } from '../../components/common/Modal';
 import { Button } from '../../components/common/Button';
 import { Calendar, AlertCircle } from 'lucide-react';
+import { colomboDateString, formatTime } from '../../utils/format';
 
 export const MyAppointmentsPage: React.FC = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
@@ -23,9 +24,7 @@ export const MyAppointmentsPage: React.FC = () => {
   // Reschedule state
   const [reschedulingAppointment, setReschedulingAppointment] = useState<Appointment | null>(null);
   const [rescheduleDate, setRescheduleDate] = useState<string>(() => {
-    const d = new Date();
-    d.setDate(d.getDate() + 1);
-    return d.toLocaleDateString('en-CA');
+    return colomboDateString(1);
   });
   const [rescheduleSlots, setRescheduleSlots] = useState<TimeSlot[]>([]);
   const [selectedRescheduleSlot, setSelectedRescheduleSlot] = useState<TimeSlot | null>(null);
@@ -208,7 +207,7 @@ export const MyAppointmentsPage: React.FC = () => {
             </label>
             <input
               type="date"
-              min={new Date().toLocaleDateString('en-CA')}
+              min={colomboDateString()}
               value={rescheduleDate}
               onChange={(e) => setRescheduleDate(e.target.value)}
               className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900 bg-white"
@@ -239,7 +238,7 @@ export const MyAppointmentsPage: React.FC = () => {
                         : 'bg-white border border-slate-200 text-slate-700 hover:border-teal-500'
                     }`}
                   >
-                    {new Date(slot.startDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    {formatTime(slot.startDateTime)}
                   </button>
                 ))}
               </div>

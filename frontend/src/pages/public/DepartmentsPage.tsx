@@ -3,7 +3,10 @@ import { Link } from 'react-router-dom';
 import { departmentService } from '../../services/departmentService';
 import { Department } from '../../types';
 import { LoadingSpinner } from '../../components/common/LoadingSpinner';
-import { Activity, ArrowRight, HeartPulse, Brain, Bone, Baby, Shield } from 'lucide-react';
+import {
+  Activity, ArrowRight, HeartPulse, Brain, Bone, Baby, Shield,
+  Stethoscope, Fingerprint, Pill, BrainCircuit, Scissors, Smile, HeartHandshake, Microscope, Syringe,
+} from 'lucide-react';
 
 export const DepartmentsPage: React.FC = () => {
   const [departments, setDepartments] = useState<Department[]>([]);
@@ -17,11 +20,23 @@ export const DepartmentsPage: React.FC = () => {
   }, []);
 
   const getIcon = (name: string) => {
-    switch (name.toLowerCase()) {
+    // British (Sri Lankan) and US spellings both map to the same icon
+    switch (name.toLowerCase().replace('ae', 'e')) {
       case 'cardiology': return <HeartPulse className="w-8 h-8 text-rose-600" />;
       case 'neurology': return <Brain className="w-8 h-8 text-indigo-600" />;
       case 'orthopedics': return <Bone className="w-8 h-8 text-teal-600" />;
       case 'pediatrics': return <Baby className="w-8 h-8 text-amber-600" />;
+      case 'general medicine': return <Stethoscope className="w-8 h-8 text-sky-600" />;
+      case 'dermatology': return <Fingerprint className="w-8 h-8 text-orange-600" />;
+      case 'gastroenterology': return <Pill className="w-8 h-8 text-lime-600" />;
+      case 'psychiatry': return <BrainCircuit className="w-8 h-8 text-violet-600" />;
+      case 'general surgery': return <Scissors className="w-8 h-8 text-slate-600" />;
+      case 'dental surgery': return <Smile className="w-8 h-8 text-cyan-600" />;
+      case 'general opd': return <Stethoscope className="w-8 h-8 text-emerald-600" />;
+      case 'microbiology':
+      case 'histopathology': return <Microscope className="w-8 h-8 text-fuchsia-600" />;
+      case 'anesthesiology': return <Syringe className="w-8 h-8 text-blue-600" />;
+      case 'obstetrics & gynecology': return <HeartHandshake className="w-8 h-8 text-pink-600" />;
       default: return <Activity className="w-8 h-8 text-teal-600" />;
     }
   };

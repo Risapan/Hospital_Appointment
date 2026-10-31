@@ -9,6 +9,7 @@ import { Modal } from '../../components/common/Modal';
 import { BookingModal } from '../../components/appointments/BookingModal';
 import { LoadingSpinner } from '../../components/common/LoadingSpinner';
 import { Search, UserPlus, Calendar, Phone, Mail, User } from 'lucide-react';
+import { formatLKR } from '../../utils/format';
 
 export const PatientSearchPage: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -171,7 +172,7 @@ export const PatientSearchPage: React.FC = () => {
               required
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              placeholder="e.g. Michael Vance"
+              placeholder="e.g. Nimal Bandara"
               className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium"
             />
           </div>
@@ -183,7 +184,7 @@ export const PatientSearchPage: React.FC = () => {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="michael.vance@example.com"
+              placeholder="nimal.bandara@example.lk"
               className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium"
             />
           </div>
@@ -231,7 +232,7 @@ export const PatientSearchPage: React.FC = () => {
                 <p className="text-[11px] text-slate-400 mt-0.5">{doc.qualifications}</p>
               </div>
               <div className="text-right">
-                <span className="text-sm font-black text-navy-950">${doc.consultationFee?.toFixed(2)}</span>
+                <span className="text-sm font-black text-navy-950">{formatLKR(doc.consultationFee)}</span>
                 <span className="block text-[10px] text-teal-600 font-bold">Select Doctor →</span>
               </div>
             </div>

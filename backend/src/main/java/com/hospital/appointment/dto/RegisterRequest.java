@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+import java.util.List;
+
 public class RegisterRequest {
 
     @NotBlank(message = "Full name is required")
@@ -16,7 +18,7 @@ public class RegisterRequest {
     @Email(message = "Invalid email format")
     private String email;
 
-    @NotBlank(message = "Password is required")
+    // Required for public and admin-created accounts; receptionist walk-ins fall back to a default
     @Size(min = 6, max = 100, message = "Password must be at least 6 characters")
     private String password;
 
@@ -34,6 +36,7 @@ public class RegisterRequest {
     private String departmentId;
     private String specialty;
     private String qualifications;
+    private List<String> hospitalIds;
 
     public RegisterRequest() {}
 
@@ -60,6 +63,9 @@ public class RegisterRequest {
 
     public String getSpecialty() { return specialty; }
     public void setSpecialty(String specialty) { this.specialty = specialty; }
+
+    public List<String> getHospitalIds() { return hospitalIds; }
+    public void setHospitalIds(List<String> hospitalIds) { this.hospitalIds = hospitalIds; }
 
     public String getQualifications() { return qualifications; }
     public void setQualifications(String qualifications) { this.qualifications = qualifications; }

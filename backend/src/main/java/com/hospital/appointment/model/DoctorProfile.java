@@ -8,6 +8,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Document(collection = "doctor_profiles")
 public class DoctorProfile {
@@ -24,10 +26,16 @@ public class DoctorProfile {
     private String specialty;
     private String biography;
     private String qualifications;
+    // Hospitals where this doctor holds clinics; patients choose one of them when booking
+    @Indexed
+    private List<String> hospitalIds = new ArrayList<>();
+
+    // Legacy single-hospital fields, kept only so older records can be migrated into hospitalIds
+    private String hospitalId;
     private String hospitalName;
     private String hospitalType; // e.g., "Government", "Private"
     private int consultationDurationMinutes = 30; // default 30 mins
-    private BigDecimal consultationFee = BigDecimal.valueOf(50.0);
+    private BigDecimal consultationFee = BigDecimal.valueOf(2500.0); // LKR
     private String profileImageUrl;
     private int experienceYears = 5;
     private String roomNumber;
@@ -68,6 +76,12 @@ public class DoctorProfile {
 
     public String getQualifications() { return qualifications; }
     public void setQualifications(String qualifications) { this.qualifications = qualifications; }
+
+    public List<String> getHospitalIds() { return hospitalIds; }
+    public void setHospitalIds(List<String> hospitalIds) { this.hospitalIds = hospitalIds != null ? hospitalIds : new ArrayList<>(); }
+
+    public String getHospitalId() { return hospitalId; }
+    public void setHospitalId(String hospitalId) { this.hospitalId = hospitalId; }
 
     public String getHospitalName() { return hospitalName; }
     public void setHospitalName(String hospitalName) { this.hospitalName = hospitalName; }

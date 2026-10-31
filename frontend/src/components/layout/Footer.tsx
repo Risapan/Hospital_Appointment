@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Activity, Phone, Mail, MapPin, Clock, ShieldCheck, Heart } from 'lucide-react';
+import { Activity, Phone, Mail, MapPin, Clock, Heart } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   return (
@@ -14,15 +14,15 @@ export const Footer: React.FC = () => {
                 <Activity className="w-6 h-6 stroke-[2.5]" />
               </div>
               <span className="text-xl font-black text-white tracking-tight">
-                Care<span className="text-teal-400">Point</span>
+                East Care<span className="text-teal-400">Point</span>
               </span>
             </div>
             <p className="text-sm text-slate-400 leading-relaxed">
-              Providing modern, compassionate, and digital medical care. Seamless appointment booking, verified specialists, and 24/7 dedicated clinical assistance.
+              Book doctor appointments at hospitals across Batticaloa in one place. Choose a hospital and doctor, pick a time, and we reserve it for you at that hospital.
             </p>
-            <div className="flex items-center gap-2 text-xs font-semibold text-emerald-400 bg-emerald-950/40 border border-emerald-800/40 px-3 py-1.5 rounded-lg w-fit">
-              <ShieldCheck className="w-4 h-4" /> Joint Commission Accredited
-            </div>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              East Care Point is an independent booking service and is not operated by the hospitals listed.
+            </p>
           </div>
 
           {/* Col 2: Quick Links */}
@@ -50,8 +50,8 @@ export const Footer: React.FC = () => {
             <ul className="space-y-2.5 text-sm">
               <li><Link to="/doctors?specialty=Cardiology" className="hover:text-teal-300 transition-colors">Cardiology & Heart Center</Link></li>
               <li><Link to="/doctors?specialty=Neurology" className="hover:text-teal-300 transition-colors">Neurology & Brain Sciences</Link></li>
-              <li><Link to="/doctors?specialty=Orthopedics" className="hover:text-teal-300 transition-colors">Orthopedics & Joint Care</Link></li>
-              <li><Link to="/doctors?specialty=Pediatrics" className="hover:text-teal-300 transition-colors">Pediatric & Child Health</Link></li>
+              <li><Link to="/doctors?specialty=Orthopaedics" className="hover:text-teal-300 transition-colors">Orthopaedics & Joint Care</Link></li>
+              <li><Link to="/doctors?specialty=Paediatrics" className="hover:text-teal-300 transition-colors">Paediatric & Child Health</Link></li>
             </ul>
           </div>
 
@@ -60,7 +60,7 @@ export const Footer: React.FC = () => {
             <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-4">Emergency & Contact</h4>
             <div className="flex items-start gap-3 text-sm">
               <MapPin className="w-5 h-5 text-teal-400 shrink-0 mt-0.5" />
-              <span>742 Medical Center Blvd, Metro Health District, NY 10001</span>
+              <span>Batticaloa, Sri Lanka</span>
             </div>
             <div className="flex items-center gap-3 text-sm">
               <Phone className="w-5 h-5 text-teal-400 shrink-0" />
@@ -68,7 +68,7 @@ export const Footer: React.FC = () => {
             </div>
             <div className="flex items-center gap-3 text-sm">
               <Mail className="w-5 h-5 text-teal-400 shrink-0" />
-              <span>support@carepoint-hospital.org</span>
+              <span>support@eastcarepoint.lk</span>
             </div>
             <div className="flex items-center gap-3 text-sm">
               <Clock className="w-5 h-5 text-teal-400 shrink-0" />
@@ -79,7 +79,7 @@ export const Footer: React.FC = () => {
 
         {/* Bottom bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
-          <p>© 2026 CarePoint Hospital Management System. All rights reserved.</p>
+          <p>© 2026 East Care Point, Batticaloa. All rights reserved.</p>
           <div className="flex items-center gap-1 text-slate-400">
             <span>Built with care for health & healing</span>
             <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500 inline" />

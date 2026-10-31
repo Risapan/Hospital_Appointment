@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Doctor, TimeSlot } from '../../types';
+import { Doctor, Hospital as HospitalType, TimeSlot } from '../../types';
 import { doctorService } from '../../services/doctorService';
 import { appointmentService } from '../../services/appointmentService';
+import { hospitalService } from '../../services/hospitalService';
 import { Modal } from '../common/Modal';
 import { Button } from '../common/Button';
-import { Calendar as CalendarIcon, Clock, CheckCircle2, AlertCircle, User } from 'lucide-react';
+import { Calendar as CalendarIcon, Clock, CheckCircle2, AlertCircle, User, Hospital, MapPin } from 'lucide-react';
+import { colomboDateString, formatLKR, formatTime } from '../../utils/format';
 
 interface BookingModalProps {
   doctor: Doctor | null;
@@ -14,6 +16,8 @@ interface BookingModalProps {
   // Optional patientId if booked by receptionist
   patientId?: string;
   patientName?: string;
+  // Pre-selects a hospital when booking from that hospital's page
+  hospitalId?: string;
 }
 
 export const BookingModal: React.FC<BookingModalProps> = ({
@@ -23,12 +27,18 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   onSuccess,
   patientId,
   patientName,
+  hospitalId,
 }) => {
+  const [selectedHospitalId, setSelectedHospitalId] = useState<string>('');
+  const [hospitals, setHospitals] = useState<HospitalType[]>([]);
+
+  // The hospital is the patient's preference, so every hospital is offered
+  useEffect(() => {
+    if (isOpen) hospitalService.getHospitals().then(setHospitals).catch(() => setHospitals([]));
+  }, [isOpen]);
   const [selectedDate, setSelectedDate] = useState<string>(() => {
     // Default to tomorrow or today
-    const d = new Date();
-    d.setDate(d.getDate() + 1);
-    return d.toLocaleDateString('en-CA');
+    return colomboDateString(1);
   });
   const [slots, setSlots] = useState<TimeSlot[]>([]);
   const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
@@ -38,6 +48,15 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  // Each time the window opens, ask for the hospital again (unless we came from a hospital's page)
+  useEffect(() => {
+    if (doctor && isOpen) {
+      setSelectedHospitalId(hospitalId || '');
+    }
+  }, [doctor, isOpen, hospitalId]);
+
+  const selectedHospital = hospitals.find((h) => h.id === selectedHospitalId) || null;
 
   // Fetch slots whenever doctor or selectedDate changes
   useEffect(() => {
@@ -60,6 +79,10 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   const handleBook = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!doctor || !selectedSlot) return;
+    if (!selectedHospitalId) {
+      setErrorMessage('Please choose which hospital you would like to book at.');
+      return;
+    }
     if (!reason.trim()) {
       setErrorMessage('Please provide a reason for the consultation.');
       return;
@@ -76,6 +99,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
         reasonForVisit: reason,
         patientNotes: patientNotes || undefined,
         patientId: patientId || undefined,
+        hospitalId: selectedHospitalId,
       });
 
       setSuccessMessage('Appointment successfully booked!');
@@ -96,14 +120,8 @@ export const BookingModal: React.FC<BookingModalProps> = ({
 
   if (!doctor) return null;
 
-  // Format time for slot buttons
-  const formatTime = (isoString: string) => {
-    const d = new Date(isoString);
-    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  };
-
   // Min date for picker: today
-  const minDate = new Date().toLocaleDateString('en-CA');
+  const minDate = colomboDateString();
 
   return (
     <Modal
@@ -120,7 +138,9 @@ export const BookingModal: React.FC<BookingModalProps> = ({
           </div>
           <h4 className="text-lg font-bold text-navy-950">{successMessage}</h4>
           <p className="text-sm text-slate-500">
-            A confirmation notification has been sent to your account dashboard.
+            {selectedHospital
+              ? `Your reservation at ${selectedHospital.name} is confirmed. Details are in your dashboard.`
+              : 'A confirmation notification has been sent to your account dashboard.'}
           </p>
         </div>
       ) : (
@@ -139,7 +159,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
             <div className="text-right">
               <span className="text-xs text-slate-400 block">Fee</span>
               <span className="text-base font-extrabold text-navy-950">
-                ${doctor.consultationFee ? doctor.consultationFee.toFixed(2) : '50.00'}
+                {formatLKR(doctor.consultationFee)}
               </span>
             </div>
           </div>
@@ -151,11 +171,49 @@ export const BookingModal: React.FC<BookingModalProps> = ({
             </div>
           )}
 
+          {/* Hospital Selector */}
+          <div>
+            <label className="block text-xs font-bold text-navy-950 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+              <Hospital className="w-4 h-4 text-slate-400" />
+              1. Which hospital would you like to book at?
+            </label>
+            {hospitals.length === 0 ? (
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-100 text-xs text-slate-500">Loading hospitals...</div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {hospitals.map((h) => {
+                  const isSelected = h.id === selectedHospitalId;
+                  return (
+                    <button
+                      type="button"
+                      key={h.id}
+                      onClick={() => setSelectedHospitalId(h.id)}
+                      className={`text-left p-3 rounded-xl border transition-all ${
+                        isSelected
+                          ? 'border-teal-600 bg-teal-50 ring-2 ring-teal-600 ring-offset-1'
+                          : 'border-slate-200 bg-white hover:border-teal-500'
+                      }`}
+                    >
+                      <span className={`block text-sm font-bold ${isSelected ? 'text-teal-800' : 'text-navy-950'}`}>{h.name}</span>
+                      {h.address && (
+                        <span className="mt-0.5 text-[11px] text-slate-500 flex items-start gap-1">
+                          <MapPin className="w-3 h-3 shrink-0 mt-0.5" /> {h.address}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {selectedHospitalId ? (
+          <>
           {/* Date Selector */}
           <div>
             <label className="block text-xs font-bold text-navy-950 uppercase tracking-wider mb-2 flex items-center gap-1.5">
               <CalendarIcon className="w-4 h-4 text-slate-400" />
-              1. Select Appointment Date
+              2. Select Appointment Date
             </label>
             <input
               type="date"
@@ -171,7 +229,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
           <div>
             <label className="block text-xs font-bold text-navy-950 uppercase tracking-wider mb-2 flex items-center gap-1.5">
               <Clock className="w-4 h-4 text-slate-400" />
-              2. Select Available Time Slot
+              3. Select Available Time Slot
             </label>
 
             {isLoadingSlots ? (
@@ -209,7 +267,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
           {/* Reason for Visit */}
           <div>
             <label className="block text-xs font-bold text-navy-950 uppercase tracking-wider mb-1.5">
-              3. Reason for Visit *
+              4. Reason for Visit *
             </label>
             <input
               type="text"
@@ -234,6 +292,12 @@ export const BookingModal: React.FC<BookingModalProps> = ({
               className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
             />
           </div>
+          </>
+          ) : (
+            hospitals.length > 0 && (
+              <p className="text-xs text-slate-500">Choose a hospital above to see the available dates and times.</p>
+            )
+          )}
 
           {/* Form Actions */}
           <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-3">
@@ -243,7 +307,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
             <Button
               variant="secondary"
               type="submit"
-              disabled={!selectedSlot || !reason.trim() || isSubmitting}
+              disabled={!selectedHospitalId || !selectedSlot || !reason.trim() || isSubmitting}
               isLoading={isSubmitting}
             >
               Confirm Appointment

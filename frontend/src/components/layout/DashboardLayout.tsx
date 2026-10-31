@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { HistoryNav } from '../common/HistoryNav';
 import { useAuth } from '../../contexts/AuthContext';
 import {
   Activity,
@@ -8,6 +9,7 @@ import {
   User,
   Users,
   Building2,
+  Hospital,
   Clock,
   Shield,
   FileText,
@@ -44,6 +46,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         return [
           { name: 'Analytics & Overview', path: '/admin/dashboard', icon: LayoutDashboard },
           { name: 'Doctors Management', path: '/admin/doctors', icon: Users },
+          { name: 'Hospitals', path: '/admin/hospitals', icon: Hospital },
           { name: 'Departments', path: '/admin/departments', icon: Building2 },
           { name: 'Appointment Records', path: '/admin/appointments', icon: Calendar },
           { name: 'User Accounts', path: '/admin/users', icon: Shield },
@@ -101,7 +104,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                 <Activity className="w-5 h-5 stroke-[2.5]" />
               </div>
               <span className="text-lg font-black text-white tracking-tight">
-                Care<span className="text-teal-400">Point</span>
+                East Care<span className="text-teal-400">Point</span>
               </span>
             </Link>
             <button
@@ -188,6 +191,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               >
                 <Menu className="w-6 h-6" />
               </button>
+              <HistoryNav />
               <div>
                 <h1 className="text-xl font-black text-navy-950">{title}</h1>
                 {subtitle && <p className="text-xs text-slate-500 mt-0.5">{subtitle}</p>}

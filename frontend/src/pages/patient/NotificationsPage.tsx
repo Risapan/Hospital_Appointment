@@ -6,6 +6,7 @@ import { LoadingSpinner } from '../../components/common/LoadingSpinner';
 import { EmptyState } from '../../components/common/EmptyState';
 import { Button } from '../../components/common/Button';
 import { Bell, CheckCheck, Clock, CheckCircle } from 'lucide-react';
+import { formatDateTime } from '../../utils/format';
 
 export const NotificationsPage: React.FC = () => {
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
@@ -86,12 +87,7 @@ export const NotificationsPage: React.FC = () => {
                   <p className="text-xs text-slate-600 leading-relaxed">{n.message}</p>
                   <span className="text-[11px] text-slate-400 flex items-center gap-1 pt-1">
                     <Clock className="w-3 h-3" />
-                    {new Date(n.createdAt).toLocaleString([], {
-                      month: 'short',
-                      day: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                    })}
+                    {formatDateTime(n.createdAt)}
                   </span>
                 </div>
 

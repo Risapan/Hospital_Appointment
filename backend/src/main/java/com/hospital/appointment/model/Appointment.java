@@ -30,6 +30,9 @@ public class Appointment {
     @Indexed
     private String departmentId;
 
+    // Hospital where East Care Point makes the reservation
+    private String hospitalId;
+
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
 
@@ -54,6 +57,9 @@ public class Appointment {
     private Instant updatedAt;
 
     public Appointment() {}
+
+    public String getHospitalId() { return hospitalId; }
+    public void setHospitalId(String hospitalId) { this.hospitalId = hospitalId; }
 
     public Appointment(String patientId, String doctorId, String departmentId, LocalDateTime startDateTime, LocalDateTime endDateTime, String reasonForVisit) {
         this.patientId = patientId;

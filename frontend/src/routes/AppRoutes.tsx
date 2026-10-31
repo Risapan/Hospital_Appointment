@@ -7,6 +7,9 @@ import { HomePage } from '../pages/public/HomePage';
 import { DoctorsPage } from '../pages/public/DoctorsPage';
 import { DoctorDetailPage } from '../pages/public/DoctorDetailPage';
 import { DepartmentsPage } from '../pages/public/DepartmentsPage';
+import { HospitalsPage } from '../pages/public/HospitalsPage';
+import { BookPage } from '../pages/public/BookPage';
+import { HospitalDetailPage } from '../pages/public/HospitalDetailPage';
 import { AboutPage } from '../pages/public/AboutPage';
 import { LoginPage } from '../pages/public/LoginPage';
 import { RegisterPage } from '../pages/public/RegisterPage';
@@ -28,6 +31,7 @@ import { DoctorSchedulePage } from '../pages/doctor/DoctorSchedulePage';
 import { AdminDashboard } from '../pages/admin/AdminDashboard';
 import { DoctorManagementPage } from '../pages/admin/DoctorManagementPage';
 import { DepartmentManagementPage } from '../pages/admin/DepartmentManagementPage';
+import { HospitalManagementPage } from '../pages/admin/HospitalManagementPage';
 import { AppointmentAuditPage } from '../pages/admin/AppointmentAuditPage';
 import { UserManagementPage } from '../pages/admin/UserManagementPage';
 import { AuditLogViewerPage } from '../pages/admin/AuditLogViewerPage';
@@ -44,6 +48,9 @@ export const AppRoutes: React.FC = () => {
       <Route path="/" element={<HomePage />} />
       <Route path="/doctors" element={<DoctorsPage />} />
       <Route path="/doctors/:id" element={<DoctorDetailPage />} />
+      <Route path="/book" element={<BookPage />} />
+      <Route path="/hospitals" element={<HospitalsPage />} />
+      <Route path="/hospitals/:id" element={<HospitalDetailPage />} />
       <Route path="/departments" element={<DepartmentsPage />} />
       <Route path="/about" element={<AboutPage />} />
       <Route path="/login" element={<LoginPage />} />
@@ -118,6 +125,14 @@ export const AppRoutes: React.FC = () => {
         element={
           <ProtectedRoute allowedRoles={['ADMIN']}>
             <AdminDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/hospitals"
+        element={
+          <ProtectedRoute allowedRoles={['ADMIN']}>
+            <HospitalManagementPage />
           </ProtectedRoute>
         }
       />

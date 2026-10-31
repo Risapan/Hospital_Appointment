@@ -2,31 +2,32 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { doctorService } from '../../services/doctorService';
 import { departmentService } from '../../services/departmentService';
-import { Doctor, Department } from '../../types';
+import { hospitalService } from '../../services/hospitalService';
+import { Doctor, Department, Hospital } from '../../types';
 import { DoctorCard } from '../../components/doctors/DoctorCard';
 import { DoctorFilter } from '../../components/doctors/DoctorFilter';
-import { BookingModal } from '../../components/appointments/BookingModal';
 import { LoadingSpinner } from '../../components/common/LoadingSpinner';
 import { EmptyState } from '../../components/common/EmptyState';
-import { useAuth } from '../../contexts/AuthContext';
 import { Stethoscope } from 'lucide-react';
+import { HistoryNav } from '../../components/common/HistoryNav';
 
 export const DoctorsPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
 
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [departments, setDepartments] = useState<Department[]>([]);
+  const [hospitals, setHospitals] = useState<Hospital[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [bookingDoctor, setBookingDoctor] = useState<Doctor | null>(null);
 
   const search = searchParams.get('search') || '';
   const selectedDepartment = searchParams.get('departmentId') || '';
   const specialty = searchParams.get('specialty') || '';
+  const selectedHospital = searchParams.get('hospitalId') || '';
 
   useEffect(() => {
     departmentService.getDepartments().then(setDepartments).catch(console.error);
+    hospitalService.getHospitals().then(setHospitals).catch(console.error);
   }, []);
 
   useEffect(() => {
@@ -35,12 +36,13 @@ export const DoctorsPage: React.FC = () => {
       search: search || undefined,
       departmentId: selectedDepartment || undefined,
       specialty: specialty || undefined,
+      hospitalId: selectedHospital || undefined,
       activeOnly: true,
     })
       .then(setDoctors)
       .catch(console.error)
       .finally(() => setIsLoading(false));
-  }, [search, selectedDepartment, specialty]);
+  }, [search, selectedDepartment, specialty, selectedHospital]);
 
   const updateParam = (key: string, val: string) => {
     const next = new URLSearchParams(searchParams);
@@ -56,22 +58,22 @@ export const DoctorsPage: React.FC = () => {
     setSearchParams(new URLSearchParams());
   };
 
+  // Booking starts by asking which hospital the patient prefers
   const handleBook = (doc: Doctor) => {
-    if (!isAuthenticated) {
-      navigate('/login?redirect=/doctors');
-      return;
-    }
-    setBookingDoctor(doc);
+    navigate(`/book?doctorId=${doc.id}`);
   };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+      {/* Back / Forward */}
+      <HistoryNav showLabels />
+
       {/* Title */}
       <div>
-        <span className="text-xs font-bold uppercase tracking-wider text-teal-700">Medical Faculty</span>
-        <h1 className="text-3xl font-black text-navy-950 mt-1">Our Doctors & Clinical Specialists</h1>
+        <span className="text-xs font-bold uppercase tracking-wider text-teal-700">Find a Doctor</span>
+        <h1 className="text-3xl font-black text-navy-950 mt-1">Doctors in Batticaloa</h1>
         <p className="text-sm text-slate-500 mt-1">
-          Select from our board-certified medical experts, view daily availability, and book your consultation.
+          Choose a hospital and doctor, check available times, and we will reserve your appointment at that hospital.
         </p>
       </div>
 
@@ -82,6 +84,9 @@ export const DoctorsPage: React.FC = () => {
         selectedDepartment={selectedDepartment}
         onDepartmentChange={(val) => updateParam('departmentId', val)}
         departments={departments}
+        selectedHospital={selectedHospital}
+        onHospitalChange={(val) => updateParam('hospitalId', val)}
+        hospitals={hospitals}
         specialty={specialty}
         onSpecialtyChange={(val) => updateParam('specialty', val)}
         onReset={handleReset}
@@ -111,15 +116,6 @@ export const DoctorsPage: React.FC = () => {
         </div>
       )}
 
-      {/* Booking Modal */}
-      <BookingModal
-        doctor={bookingDoctor}
-        isOpen={!!bookingDoctor}
-        onClose={() => setBookingDoctor(null)}
-        onSuccess={() => {
-          navigate('/patient/appointments');
-        }}
-      />
     </div>
   );
 };

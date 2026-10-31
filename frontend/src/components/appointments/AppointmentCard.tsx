@@ -2,7 +2,8 @@ import React from 'react';
 import { Appointment, Role } from '../../types';
 import { Badge } from '../common/Badge';
 import { Button } from '../common/Button';
-import { Calendar, Clock, MapPin, User, FileText, XCircle, RotateCcw, CheckCircle } from 'lucide-react';
+import { Calendar, Clock, MapPin, User, FileText, XCircle, RotateCcw, CheckCircle, Hospital } from 'lucide-react';
+import { formatDate, formatTime } from '../../utils/format';
 
 interface AppointmentCardProps {
   appointment: Appointment;
@@ -20,13 +21,8 @@ export const AppointmentCard: React.FC<AppointmentCardProps> = ({
   onUpdateStatus,
 }) => {
   const startDate = new Date(appointment.startDateTime);
-  const formattedDate = startDate.toLocaleDateString(undefined, {
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  });
-  const formattedTime = startDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const formattedDate = formatDate(appointment.startDateTime);
+  const formattedTime = formatTime(appointment.startDateTime);
 
   const isPast = startDate < new Date();
   const canCancel = appointment.status === 'CONFIRMED' || appointment.status === 'PENDING';
@@ -74,6 +70,17 @@ export const AppointmentCard: React.FC<AppointmentCardProps> = ({
             <span>{appointment.reasonForVisit}</span>
           </div>
         </div>
+
+        {appointment.hospitalName && (
+          <div className="flex items-start gap-2">
+            <Hospital className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
+            <span>
+              <span className="font-semibold text-navy-950">{appointment.hospitalName}</span>
+              {appointment.hospitalAddress && <span className="text-slate-500">, {appointment.hospitalAddress}</span>}
+              {appointment.hospitalPhone && <span className="text-slate-500"> · {appointment.hospitalPhone}</span>}
+            </span>
+          </div>
+        )}
 
         {appointment.roomNumber && (
           <div className="flex items-center gap-2">

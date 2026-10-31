@@ -16,6 +16,7 @@ import {
   FileText,
   Clock,
 } from 'lucide-react';
+import { formatDate, formatTime } from '../../utils/format';
 
 export const AdminDashboard: React.FC = () => {
   const [stats, setStats] = useState<DashboardStats | null>(null);
@@ -117,7 +118,7 @@ export const AdminDashboard: React.FC = () => {
                       <td className="py-3 font-bold text-navy-950">{apt.patientName}</td>
                       <td className="py-3">{apt.doctorName}</td>
                       <td className="py-3 text-slate-500">
-                        {new Date(apt.startDateTime).toLocaleDateString()} {new Date(apt.startDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        {formatDate(apt.startDateTime, { day: '2-digit', month: 'short', year: 'numeric' })} {formatTime(apt.startDateTime)}
                       </td>
                       <td className="py-3 text-right">
                         <Badge status={apt.status} size="sm">{apt.status}</Badge>
@@ -152,7 +153,7 @@ export const AdminDashboard: React.FC = () => {
                 </div>
                 <div className="text-right text-[11px] text-slate-400 shrink-0">
                   <Clock className="w-3 h-3 inline mr-1" />
-                  {new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  {formatTime(log.timestamp)}
                 </div>
               </div>
             ))}

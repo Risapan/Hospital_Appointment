@@ -4,6 +4,7 @@ import { AuditLogItem } from '../../types';
 import { DashboardLayout } from '../../components/layout/DashboardLayout';
 import { LoadingSpinner } from '../../components/common/LoadingSpinner';
 import { FileText, Clock, Search } from 'lucide-react';
+import { formatDateTime } from '../../utils/format';
 
 export const AuditLogViewerPage: React.FC = () => {
   const [logs, setLogs] = useState<AuditLogItem[]>([]);
@@ -66,7 +67,7 @@ export const AuditLogViewerPage: React.FC = () => {
                   {filtered.map((log) => (
                     <tr key={log.id} className="hover:bg-slate-50/50">
                       <td className="py-3.5 px-6 text-slate-500 whitespace-nowrap">
-                        {new Date(log.timestamp).toLocaleString()}
+                        {formatDateTime(log.timestamp)}
                       </td>
                       <td className="py-3.5 px-6 font-bold text-navy-950">{log.actorEmail}</td>
                       <td className="py-3.5 px-6">

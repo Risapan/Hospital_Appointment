@@ -14,10 +14,12 @@ import com.hospital.appointment.model.Appointment;
 import com.hospital.appointment.model.AppointmentStatus;
 import com.hospital.appointment.model.Department;
 import com.hospital.appointment.model.DoctorProfile;
+import com.hospital.appointment.model.Hospital;
 import com.hospital.appointment.model.Role;
 import com.hospital.appointment.model.User;
 import com.hospital.appointment.repository.AppointmentRepository;
 import com.hospital.appointment.repository.DepartmentRepository;
+import com.hospital.appointment.repository.HospitalRepository;
 import com.hospital.appointment.repository.DoctorProfileRepository;
 import com.hospital.appointment.repository.UserRepository;
 import com.hospital.appointment.security.UserDetailsImpl;
@@ -37,6 +39,7 @@ public class AppointmentService {
     private final AppointmentRepository appointmentRepository;
     private final DoctorProfileRepository doctorProfileRepository;
     private final DepartmentRepository departmentRepository;
+    private final HospitalRepository hospitalRepository;
     private final UserRepository userRepository;
     private final AvailabilityService availabilityService;
     private final NotificationService notificationService;
@@ -45,6 +48,7 @@ public class AppointmentService {
     public AppointmentService(AppointmentRepository appointmentRepository,
                               DoctorProfileRepository doctorProfileRepository,
                               DepartmentRepository departmentRepository,
+                              HospitalRepository hospitalRepository,
                               UserRepository userRepository,
                               AvailabilityService availabilityService,
                               NotificationService notificationService,
@@ -52,10 +56,30 @@ public class AppointmentService {
         this.appointmentRepository = appointmentRepository;
         this.doctorProfileRepository = doctorProfileRepository;
         this.departmentRepository = departmentRepository;
+        this.hospitalRepository = hospitalRepository;
         this.userRepository = userRepository;
         this.availabilityService = availabilityService;
         this.notificationService = notificationService;
         this.auditService = auditService;
+    }
+
+    /**
+     * The hospital is the patient's preference: East Care Point makes the reservation there on their behalf.
+     * Without a choice we fall back to the doctor's own hospital when there is exactly one.
+     */
+    private String resolveHospital(String requestedHospitalId, DoctorProfile doctor) {
+        if (requestedHospitalId == null || requestedHospitalId.isBlank()) {
+            if (doctor.getHospitalIds().size() == 1) {
+                return doctor.getHospitalIds().get(0);
+            }
+            throw new BadRequestException("Please choose the hospital you would like to book through.");
+        }
+        Hospital hospital = hospitalRepository.findById(requestedHospitalId)
+                .orElseThrow(() -> new BadRequestException("The selected hospital was not found."));
+        if (!hospital.isActive()) {
+            throw new BadRequestException("The selected hospital is not taking bookings right now.");
+        }
+        return hospital.getId();
     }
 
     public AppointmentResponse bookAppointment(AppointmentRequest request, UserDetailsImpl currentUser) {
@@ -120,6 +144,7 @@ public class AppointmentService {
                 request.getReasonForVisit()
         );
         appointment.setPatientNotes(request.getPatientNotes());
+        appointment.setHospitalId(resolveHospital(request.getHospitalId(), doctorProfile));
         appointment.setStatus(AppointmentStatus.CONFIRMED);
 
         try {
@@ -421,6 +446,14 @@ public class AppointmentService {
 
         res.setDepartmentId(apt.getDepartmentId());
         res.setDepartmentName(dept != null ? dept.getName() : "");
+
+        String hospitalId = apt.getHospitalId() != null ? apt.getHospitalId()
+                : (docProfile != null && !docProfile.getHospitalIds().isEmpty() ? docProfile.getHospitalIds().get(0) : null);
+        Hospital hospital = hospitalId != null ? hospitalRepository.findById(hospitalId).orElse(null) : null;
+        res.setHospitalId(hospitalId);
+        res.setHospitalName(hospital != null ? hospital.getName() : (docProfile != null ? docProfile.getHospitalName() : null));
+        res.setHospitalAddress(hospital != null ? hospital.getAddress() : null);
+        res.setHospitalPhone(hospital != null ? hospital.getPhone() : null);
 
         res.setStartDateTime(apt.getStartDateTime());
         res.setEndDateTime(apt.getEndDateTime());

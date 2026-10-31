@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { adminService } from '../../services/adminService';
 import { departmentService } from '../../services/departmentService';
+import { hospitalService } from '../../services/hospitalService';
 import { doctorService } from '../../services/doctorService';
-import { Doctor, Department } from '../../types';
+import { Doctor, Department, Hospital } from '../../types';
 import { DashboardLayout } from '../../components/layout/DashboardLayout';
 import { Button } from '../../components/common/Button';
 import { Modal } from '../../components/common/Modal';
 import { LoadingSpinner } from '../../components/common/LoadingSpinner';
 import { Plus, CheckCircle, XCircle, Search } from 'lucide-react';
+import { formatLKR } from '../../utils/format';
 
 export const DoctorManagementPage: React.FC = () => {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [departments, setDepartments] = useState<Department[]>([]);
+  const [hospitals, setHospitals] = useState<Hospital[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [search, setSearch] = useState<string>('');
 
@@ -22,6 +25,11 @@ export const DoctorManagementPage: React.FC = () => {
   const [newPassword, setNewPassword] = useState('doctor123');
   const [newPhone, setNewPhone] = useState('');
   const [newDeptId, setNewDeptId] = useState('');
+  const [newHospitalIds, setNewHospitalIds] = useState<string[]>([]);
+  // Edit-hospitals modal for an existing doctor
+  const [editingDoctor, setEditingDoctor] = useState<Doctor | null>(null);
+  const [editHospitalIds, setEditHospitalIds] = useState<string[]>([]);
+  const [isSavingHospitals, setIsSavingHospitals] = useState(false);
   const [newSpecialty, setNewSpecialty] = useState('');
   const [newQualifications, setNewQualifications] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -32,10 +40,12 @@ export const DoctorManagementPage: React.FC = () => {
       adminService.getAllUsers('DOCTOR'),
       departmentService.getDepartments(),
       doctorService.getAllDoctors({ activeOnly: false }),
+      hospitalService.getHospitals(false),
     ])
-      .then(([_, depts, docs]) => {
+      .then(([_, depts, docs, hosps]) => {
         setDepartments(depts);
         setDoctors(docs);
+        setHospitals(hosps);
       })
       .catch(console.error)
       .finally(() => setIsLoading(false));
@@ -56,8 +66,50 @@ export const DoctorManagementPage: React.FC = () => {
     }
   };
 
+  const toggleId = (ids: string[], id: string) => (ids.includes(id) ? ids.filter((x) => x !== id) : [...ids, id]);
+
+  const openEditHospitals = (doc: Doctor) => {
+    setEditingDoctor(doc);
+    setEditHospitalIds(doc.hospitalIds);
+  };
+
+  const handleSaveHospitals = async () => {
+    if (!editingDoctor) return;
+    setIsSavingHospitals(true);
+    try {
+      // send "active" too: the update endpoint applies it, and omitting it would deactivate the doctor
+      const updated = await adminService.updateDoctor(editingDoctor.id, { hospitalIds: editHospitalIds, active: editingDoctor.active });
+      setDoctors((prev) => prev.map((d) => (d.id === updated.id ? updated : d)));
+      setEditingDoctor(null);
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Failed to update hospitals');
+    } finally {
+      setIsSavingHospitals(false);
+    }
+  };
+
+  const hospitalCheckboxes = (selected: string[], onToggle: (id: string) => void) => (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+      {hospitals.map((h) => (
+        <label
+          key={h.id}
+          className={`flex items-center gap-2 px-3 py-2 rounded-xl border text-xs font-semibold cursor-pointer transition-colors ${
+            selected.includes(h.id) ? 'border-teal-600 bg-teal-50 text-teal-800' : 'border-slate-200 text-slate-700 hover:border-teal-400'
+          }`}
+        >
+          <input type="checkbox" checked={selected.includes(h.id)} onChange={() => onToggle(h.id)} />
+          {h.name}
+        </label>
+      ))}
+    </div>
+  );
+
   const handleAddDoctor = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (newHospitalIds.length === 0) {
+      alert('Please select at least one hospital');
+      return;
+    }
     if (!newDeptId) {
       alert('Please select a department');
       return;
@@ -70,6 +122,7 @@ export const DoctorManagementPage: React.FC = () => {
         password: newPassword,
         phoneNumber: newPhone,
         departmentId: newDeptId,
+        hospitalIds: newHospitalIds,
         specialty: newSpecialty,
         qualifications: newQualifications,
       });
@@ -79,6 +132,7 @@ export const DoctorManagementPage: React.FC = () => {
       setNewPhone('');
       setNewSpecialty('');
       setNewQualifications('');
+      setNewHospitalIds([]);
       loadData();
     } catch (err: any) {
       alert(err.response?.data?.message || 'Failed to create doctor');
@@ -135,6 +189,7 @@ export const DoctorManagementPage: React.FC = () => {
                 <thead className="bg-slate-50 border-b border-slate-150 text-slate-400 uppercase tracking-wider font-bold">
                   <tr>
                     <th className="py-3.5 px-6">Doctor</th>
+                    <th className="py-3.5 px-6">Hospital</th>
                     <th className="py-3.5 px-6">Department</th>
                     <th className="py-3.5 px-6">Specialty</th>
                     <th className="py-3.5 px-6">Fee</th>
@@ -156,9 +211,23 @@ export const DoctorManagementPage: React.FC = () => {
                           </div>
                         </div>
                       </td>
+                      <td className="py-4 px-6">
+                        {doc.hospitals.length > 0 ? (
+                          <span className="text-slate-600">{doc.hospitals.map((h) => h.name).join(', ')}</span>
+                        ) : (
+                          <span className="text-amber-700 font-semibold">No hospital (not bookable)</span>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => openEditHospitals(doc)}
+                          className="block mt-1 text-[11px] font-bold text-teal-700 hover:text-teal-800"
+                        >
+                          Edit hospitals
+                        </button>
+                      </td>
                       <td className="py-4 px-6 font-semibold text-slate-600">{doc.departmentName}</td>
                       <td className="py-4 px-6">{doc.specialty}</td>
-                      <td className="py-4 px-6 font-bold text-navy-950">${doc.consultationFee?.toFixed(2)}</td>
+                      <td className="py-4 px-6 font-bold text-navy-950">{formatLKR(doc.consultationFee)}</td>
                       <td className="py-4 px-6">
                         <span
                           className={`inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full ${
@@ -206,7 +275,7 @@ export const DoctorManagementPage: React.FC = () => {
                 required
                 value={newFullName}
                 onChange={(e) => setNewFullName(e.target.value)}
-                placeholder="Dr. Alex Morgan"
+                placeholder="Dr. Sunil Rajapaksa"
                 className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium"
               />
             </div>
@@ -218,9 +287,14 @@ export const DoctorManagementPage: React.FC = () => {
                 required
                 value={newEmail}
                 onChange={(e) => setNewEmail(e.target.value)}
-                placeholder="alex.morgan@hospital.com"
+                placeholder="sunil.rajapaksa@hospital.lk"
                 className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium"
               />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-navy-950 uppercase mb-1">Hospitals * (select all where this doctor works)</label>
+              {hospitalCheckboxes(newHospitalIds, (id) => setNewHospitalIds((prev) => toggleId(prev, id)))}
             </div>
 
             <div>
@@ -267,7 +341,7 @@ export const DoctorManagementPage: React.FC = () => {
                 type="text"
                 value={newQualifications}
                 onChange={(e) => setNewQualifications(e.target.value)}
-                placeholder="MD, FACS, Board Certified"
+                placeholder="MBBS (Colombo), MD, MRCP (UK)"
                 className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium"
               />
             </div>
@@ -282,6 +356,25 @@ export const DoctorManagementPage: React.FC = () => {
             </Button>
           </div>
         </form>
+      </Modal>
+
+      {/* Edit Hospitals Modal */}
+      <Modal
+        isOpen={!!editingDoctor}
+        onClose={() => setEditingDoctor(null)}
+        title="Hospitals for this doctor"
+        description={editingDoctor ? `Patients booking ${editingDoctor.fullName} will choose from these hospitals.` : undefined}
+      >
+        <div className="space-y-4">
+          {hospitalCheckboxes(editHospitalIds, (id) => setEditHospitalIds((prev) => toggleId(prev, id)))}
+          {editHospitalIds.length === 0 && (
+            <p className="text-xs text-amber-700 font-semibold">With no hospital selected, patients can't book this doctor.</p>
+          )}
+          <div className="flex justify-end gap-2 pt-2 border-t border-slate-100">
+            <Button variant="ghost" type="button" onClick={() => setEditingDoctor(null)}>Cancel</Button>
+            <Button variant="secondary" type="button" onClick={handleSaveHospitals} isLoading={isSavingHospitals}>Save</Button>
+          </div>
+        </div>
       </Modal>
     </DashboardLayout>
   );

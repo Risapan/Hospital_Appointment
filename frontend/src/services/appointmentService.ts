@@ -9,6 +9,7 @@ export const appointmentService = {
     reasonForVisit: string;
     patientNotes?: string;
     patientId?: string;
+    hospitalId?: string;
   }): Promise<Appointment> {
     const res = await api.post<Appointment>('/appointments', data);
     return res.data;

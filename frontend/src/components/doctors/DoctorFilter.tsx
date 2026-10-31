@@ -1,5 +1,5 @@
 import React from 'react';
-import { Department } from '../../types';
+import { Department, Hospital } from '../../types';
 import { Search, Filter, RotateCcw } from 'lucide-react';
 
 interface DoctorFilterProps {
@@ -8,6 +8,9 @@ interface DoctorFilterProps {
   selectedDepartment: string;
   onDepartmentChange: (val: string) => void;
   departments: Department[];
+  selectedHospital: string;
+  onHospitalChange: (val: string) => void;
+  hospitals: Hospital[];
   specialty: string;
   onSpecialtyChange: (val: string) => void;
   onReset: () => void;
@@ -19,15 +22,18 @@ export const DoctorFilter: React.FC<DoctorFilterProps> = ({
   selectedDepartment,
   onDepartmentChange,
   departments,
+  selectedHospital,
+  onHospitalChange,
+  hospitals,
   specialty,
   onSpecialtyChange,
   onReset,
 }) => {
   return (
     <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Search Input */}
-        <div className="relative md:col-span-2">
+        <div className="relative">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           <input
             type="text"
@@ -36,6 +42,22 @@ export const DoctorFilter: React.FC<DoctorFilterProps> = ({
             placeholder="Search by doctor name or specialty..."
             className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900 focus:border-transparent transition-all placeholder:text-slate-400"
           />
+        </div>
+
+        {/* Hospital Select */}
+        <div>
+          <select
+            value={selectedHospital}
+            onChange={(e) => onHospitalChange(e.target.value)}
+            className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900 focus:border-transparent transition-all bg-white text-slate-700"
+          >
+            <option value="">All Hospitals</option>
+            {hospitals.map((h) => (
+              <option key={h.id} value={h.id}>
+                {h.name}
+              </option>
+            ))}
+          </select>
         </div>
 
         {/* Department Select */}

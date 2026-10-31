@@ -1,7 +1,8 @@
 import React from 'react';
 import { Doctor } from '../../types';
 import { Button } from '../common/Button';
-import { Star, Clock, Calendar, MapPin, Award, CheckCircle, Building2 } from 'lucide-react';
+import { Clock, Calendar, MapPin, Award, CheckCircle, Building2 } from 'lucide-react';
+import { formatLKR } from '../../utils/format';
 
 interface DoctorCardProps {
   doctor: Doctor;
@@ -38,10 +39,6 @@ export const DoctorCard: React.FC<DoctorCardProps> = ({ doctor, onBook, onViewPr
               <span className="text-xs font-bold text-teal-700 bg-teal-50 px-2.5 py-0.5 rounded-full border border-teal-100/80">
                 {doctor.departmentName || 'Specialist'}
               </span>
-              <span className="text-xs font-semibold text-slate-500 flex items-center gap-1">
-                <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
-                4.9 (120+ reviews)
-              </span>
             </div>
 
             <h3 className="text-lg font-extrabold text-navy-950 mt-1 truncate group-hover:text-teal-700 transition-colors">
@@ -69,10 +66,12 @@ export const DoctorCard: React.FC<DoctorCardProps> = ({ doctor, onBook, onViewPr
 
         {/* Quick Highlights */}
         <div className="mt-4 pt-4 border-t border-slate-100 grid grid-cols-2 gap-2 text-xs text-slate-600">
-          <div className="flex items-center gap-1.5">
-            <Award className="w-4 h-4 text-slate-400" />
-            <span>{doctor.experienceYears}+ Yrs Experience</span>
-          </div>
+          {doctor.experienceYears > 0 && (
+            <div className="flex items-center gap-1.5">
+              <Award className="w-4 h-4 text-slate-400" />
+              <span>{doctor.experienceYears}+ Yrs Experience</span>
+            </div>
+          )}
           <div className="flex items-center gap-1.5">
             <Clock className="w-4 h-4 text-slate-400" />
             <span>{doctor.consultationDurationMinutes} min slot</span>
@@ -91,7 +90,7 @@ export const DoctorCard: React.FC<DoctorCardProps> = ({ doctor, onBook, onViewPr
         <div>
           <span className="block text-[11px] text-slate-400 uppercase font-semibold">Consultation</span>
           <span className="text-lg font-black text-navy-950">
-            Rs. {doctor.consultationFee ? doctor.consultationFee.toFixed(2) : '5000.00'}
+            {formatLKR(doctor.consultationFee)}
           </span>
         </div>
 

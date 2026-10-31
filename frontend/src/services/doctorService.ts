@@ -2,7 +2,7 @@ import api from './api';
 import { Doctor, TimeSlot, Availability, BlockedPeriod } from '../types';
 
 export const doctorService = {
-  async getAllDoctors(params?: { departmentId?: string; specialty?: string; search?: string; activeOnly?: boolean }): Promise<Doctor[]> {
+  async getAllDoctors(params?: { departmentId?: string; specialty?: string; search?: string; activeOnly?: boolean; hospitalId?: string }): Promise<Doctor[]> {
     const res = await api.get<Doctor[]>('/doctors', { params });
     return res.data;
   },

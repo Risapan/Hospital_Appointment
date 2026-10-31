@@ -19,6 +19,7 @@ import {
   FileText,
   AlertCircle,
 } from 'lucide-react';
+import { formatDate, formatTime } from '../../utils/format';
 
 export const PatientDashboard: React.FC = () => {
   const { user } = useAuth();
@@ -99,18 +100,11 @@ export const PatientDashboard: React.FC = () => {
               <div className="flex flex-wrap items-center gap-4 text-xs text-slate-300 pt-2">
                 <span className="flex items-center gap-1.5 font-bold text-white">
                   <Calendar className="w-4 h-4 text-teal-400" />
-                  {new Date(nextAppointment.startDateTime).toLocaleDateString(undefined, {
-                    weekday: 'short',
-                    month: 'short',
-                    day: 'numeric',
-                  })}
+                  {formatDate(nextAppointment.startDateTime, { weekday: 'short', day: '2-digit', month: 'short' })}
                 </span>
                 <span className="flex items-center gap-1.5 font-bold text-white">
                   <Clock className="w-4 h-4 text-teal-400" />
-                  {new Date(nextAppointment.startDateTime).toLocaleTimeString([], {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })}
+                  {formatTime(nextAppointment.startDateTime)}
                 </span>
                 {nextAppointment.roomNumber && (
                   <span>Room: {nextAppointment.roomNumber}</span>

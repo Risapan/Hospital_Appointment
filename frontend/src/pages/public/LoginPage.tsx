@@ -64,7 +64,7 @@ export const LoginPage: React.FC = () => {
           <div className="w-12 h-12 bg-navy-900 text-teal-400 rounded-2xl flex items-center justify-center mx-auto shadow-md">
             <Activity className="w-7 h-7 stroke-[2.5]" />
           </div>
-          <h2 className="text-2xl font-black text-navy-950">Sign In to CarePoint</h2>
+          <h2 className="text-2xl font-black text-navy-950">Sign In to East Care Point</h2>
           <p className="text-xs text-slate-500 font-medium">Access your hospital portal and manage appointments</p>
         </div>
 
@@ -129,31 +129,31 @@ export const LoginPage: React.FC = () => {
           <div className="grid grid-cols-2 gap-2 text-xs">
             <button
               type="button"
-              onClick={() => handleQuickLogin('patient@hospital.com', 'patient123')}
+              onClick={() => handleQuickLogin('patient@hospital.lk', 'patient123')}
               className="p-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-left flex items-center gap-2 transition-colors"
             >
               <User className="w-3.5 h-3.5 text-teal-600" />
               <div>
                 <span className="font-bold block text-navy-950 text-[11px]">Patient</span>
-                <span className="text-[10px] text-slate-400 block -mt-0.5">patient@hospital.com</span>
+                <span className="text-[10px] text-slate-400 block -mt-0.5">patient@hospital.lk</span>
               </div>
             </button>
 
             <button
               type="button"
-              onClick={() => handleQuickLogin('sarah.jenkins@hospital.com', 'doctor123')}
+              onClick={() => handleQuickLogin('chaminda.perera@hospital.lk', 'doctor123')}
               className="p-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-left flex items-center gap-2 transition-colors"
             >
               <Stethoscope className="w-3.5 h-3.5 text-indigo-600" />
               <div>
                 <span className="font-bold block text-navy-950 text-[11px]">Doctor</span>
-                <span className="text-[10px] text-slate-400 block -mt-0.5">Dr. Sarah Jenkins</span>
+                <span className="text-[10px] text-slate-400 block -mt-0.5">Dr. Chaminda Perera</span>
               </div>
             </button>
 
             <button
               type="button"
-              onClick={() => handleQuickLogin('receptionist@hospital.com', 'receptionist123')}
+              onClick={() => handleQuickLogin('receptionist@hospital.lk', 'receptionist123')}
               className="p-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-left flex items-center gap-2 transition-colors"
             >
               <UserCheck className="w-3.5 h-3.5 text-amber-600" />
@@ -165,7 +165,7 @@ export const LoginPage: React.FC = () => {
 
             <button
               type="button"
-              onClick={() => handleQuickLogin('admin@hospital.com', 'admin123')}
+              onClick={() => handleQuickLogin('admin@hospital.lk', 'admin123')}
               className="p-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-left flex items-center gap-2 transition-colors"
             >
               <Shield className="w-3.5 h-3.5 text-purple-600" />

@@ -5,6 +5,7 @@ import { DashboardLayout } from '../../components/layout/DashboardLayout';
 import { Badge } from '../../components/common/Badge';
 import { LoadingSpinner } from '../../components/common/LoadingSpinner';
 import { Search, Calendar, Filter } from 'lucide-react';
+import { formatDate, formatTime } from '../../utils/format';
 
 export const AppointmentAuditPage: React.FC = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
@@ -94,8 +95,8 @@ export const AppointmentAuditPage: React.FC = () => {
                         <span className="text-[11px] text-teal-700 font-semibold">{apt.departmentName}</span>
                       </td>
                       <td className="py-4 px-6">
-                        <span className="font-bold text-navy-900 block">{new Date(apt.startDateTime).toLocaleDateString()}</span>
-                        <span className="text-[11px] text-slate-400">{new Date(apt.startDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                        <span className="font-bold text-navy-900 block">{formatDate(apt.startDateTime, { day: '2-digit', month: 'short', year: 'numeric' })}</span>
+                        <span className="text-[11px] text-slate-400">{formatTime(apt.startDateTime)}</span>
                       </td>
                       <td className="py-4 px-6 max-w-xs truncate">{apt.reasonForVisit}</td>
                       <td className="py-4 px-6">

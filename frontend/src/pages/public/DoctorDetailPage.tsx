@@ -2,10 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { doctorService } from '../../services/doctorService';
 import { Doctor, Availability } from '../../types';
-import { BookingModal } from '../../components/appointments/BookingModal';
 import { Button } from '../../components/common/Button';
 import { LoadingSpinner } from '../../components/common/LoadingSpinner';
-import { useAuth } from '../../contexts/AuthContext';
 import {
   Calendar,
   Clock,
@@ -15,19 +13,17 @@ import {
   Mail,
   Phone,
   ShieldCheck,
-  Star,
   CheckCircle,
 } from 'lucide-react';
+import { formatLKR } from '../../utils/format';
 
 export const DoctorDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
 
   const [doctor, setDoctor] = useState<Doctor | null>(null);
   const [schedules, setSchedules] = useState<Availability[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isBookingOpen, setIsBookingOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (id) {
@@ -69,19 +65,21 @@ export const DoctorDetailPage: React.FC = () => {
         {/* Left Column: Doctor Profile Card */}
         <div className="lg:col-span-8 space-y-6">
           <div className="bg-white rounded-3xl p-8 border border-slate-150 shadow-sm flex flex-col sm:flex-row gap-6 items-start">
-            <img
-              src={doctor.profileImageUrl || 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=400'}
-              alt={doctor.fullName}
-              className="w-32 h-32 rounded-2xl object-cover border-2 border-teal-100 shadow-sm shrink-0"
-            />
+            {doctor.profileImageUrl ? (
+              <img
+                src={doctor.profileImageUrl}
+                alt={doctor.fullName}
+                className="w-32 h-32 rounded-2xl object-cover border-2 border-teal-100 shadow-sm shrink-0"
+              />
+            ) : (
+              <div className="w-32 h-32 rounded-2xl bg-navy-50 text-navy-800 font-black text-4xl flex items-center justify-center border-2 border-teal-100 shrink-0">
+                {doctor.fullName.replace(/^(Dr|Prof)\.\s*/, '').charAt(0)}
+              </div>
+            )}
             <div className="flex-1 space-y-2">
               <div className="flex items-center gap-2">
                 <span className="text-xs font-bold text-teal-800 bg-teal-50 px-2.5 py-0.5 rounded-full border border-teal-100">
                   {doctor.departmentName}
-                </span>
-                <span className="text-xs font-semibold text-slate-500 flex items-center gap-1">
-                  <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
-                  4.9 Rating
                 </span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-black text-navy-950">{doctor.fullName}</h1>
@@ -92,7 +90,9 @@ export const DoctorDetailPage: React.FC = () => {
                 {doctor.roomNumber && (
                   <span className="flex items-center gap-1"><MapPin className="w-4 h-4 text-slate-400" /> Room {doctor.roomNumber}</span>
                 )}
-                <span className="flex items-center gap-1"><Award className="w-4 h-4 text-slate-400" /> {doctor.experienceYears} Years Clinical Exp</span>
+                {doctor.experienceYears > 0 && (
+                  <span className="flex items-center gap-1"><Award className="w-4 h-4 text-slate-400" /> {doctor.experienceYears} Years Clinical Exp</span>
+                )}
               </div>
             </div>
           </div>
@@ -101,7 +101,7 @@ export const DoctorDetailPage: React.FC = () => {
           <div className="bg-white rounded-3xl p-8 border border-slate-150 shadow-sm space-y-4">
             <h3 className="text-lg font-extrabold text-navy-950">Professional Biography</h3>
             <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-line">
-              {doctor.biography || 'Specialist practicing at CarePoint Hospital offering advanced medical consultation and patient care.'}
+              {doctor.biography || 'Specialist available for booking through East Care Point.'}
             </p>
           </div>
 
@@ -130,9 +130,9 @@ export const DoctorDetailPage: React.FC = () => {
               <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Consultation Fee</span>
               <div className="flex items-baseline gap-2 mt-1">
                 <span className="text-3xl font-black text-navy-950">
-                  ${doctor.consultationFee ? doctor.consultationFee.toFixed(2) : '50.00'}
+                  {formatLKR(doctor.consultationFee)}
                 </span>
-                <span className="text-xs text-slate-400">/ 30 min session</span>
+                <span className="text-xs text-slate-400">/ {doctor.consultationDurationMinutes || 30} min session</span>
               </div>
             </div>
 
@@ -143,7 +143,7 @@ export const DoctorDetailPage: React.FC = () => {
               </div>
               <div className="flex items-center gap-2">
                 <Clock className="w-4 h-4 text-teal-600" />
-                <span>Zero wait clinic admission</span>
+                <span>Reduced clinic waiting time</span>
               </div>
               <div className="flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4 text-navy-800" />
@@ -155,26 +155,13 @@ export const DoctorDetailPage: React.FC = () => {
               variant="secondary"
               className="w-full py-3"
               leftIcon={<Calendar className="w-4 h-4" />}
-              onClick={() => {
-                if (!isAuthenticated) {
-                  navigate(`/login?redirect=/doctors/${doctor.id}`);
-                } else {
-                  setIsBookingOpen(true);
-                }
-              }}
+              onClick={() => navigate(`/book?doctorId=${doctor.id}`)}
             >
               Book an Appointment
             </Button>
           </div>
         </div>
       </div>
-
-      <BookingModal
-        doctor={doctor}
-        isOpen={isBookingOpen}
-        onClose={() => setIsBookingOpen(false)}
-        onSuccess={() => navigate('/patient/appointments')}
-      />
     </div>
   );
 };

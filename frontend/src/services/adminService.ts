@@ -23,6 +23,7 @@ export const adminService = {
     password: string;
     phoneNumber?: string;
     departmentId: string;
+    hospitalIds: string[];
     specialty: string;
     qualifications?: string;
   }): Promise<Doctor> {

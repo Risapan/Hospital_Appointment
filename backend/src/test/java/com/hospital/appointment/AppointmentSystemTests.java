@@ -41,6 +41,12 @@ class AppointmentSystemTests {
     private AppointmentRepository appointmentRepository;
 
     @Autowired
+    private PatientProfileRepository patientProfileRepository;
+
+    @Autowired
+    private HospitalRepository hospitalRepository;
+
+    @Autowired
     private AppointmentService appointmentService;
 
     @Autowired
@@ -59,8 +65,13 @@ class AppointmentSystemTests {
         appointmentRepository.deleteAll();
         availabilityRepository.deleteAll();
         doctorProfileRepository.deleteAll();
+        patientProfileRepository.deleteAll();
         userRepository.deleteAll();
         departmentRepository.deleteAll();
+        hospitalRepository.deleteAll();
+
+        // Bookings are made at one of the doctor's hospitals
+        Hospital testHospital = hospitalRepository.save(new Hospital("Test Hospital", "Hospital", "Private", "1, Main Street", "Batticaloa"));
 
         // 1. Setup Department
         testDept = departmentRepository.save(new Department("Cardiology", "Heart Care", "Heart"));
@@ -74,6 +85,7 @@ class AppointmentSystemTests {
         testDoctorUser = userRepository.save(testDoctorUser);
 
         testDoctorProfile = new DoctorProfile(testDoctorUser.getId(), testDept.getId(), "Interventional Cardiology", "MD, FACC", 30, BigDecimal.valueOf(100.0));
+        testDoctorProfile.setHospitalIds(new java.util.ArrayList<>(List.of(testHospital.getId())));
         testDoctorProfile = doctorProfileRepository.save(testDoctorProfile);
 
         // 4. Setup Doctor Availability for all 7 days of the week 09:00 - 17:00

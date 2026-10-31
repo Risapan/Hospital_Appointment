@@ -11,6 +11,7 @@ import { LoadingSpinner } from '../../components/common/LoadingSpinner';
 import { EmptyState } from '../../components/common/EmptyState';
 import { Button } from '../../components/common/Button';
 import { Calendar, Clock, CheckCircle, Users, Award, AlertCircle } from 'lucide-react';
+import { colomboDateString, formatDate } from '../../utils/format';
 
 export const DoctorDashboard: React.FC = () => {
   const { user } = useAuth();
@@ -34,7 +35,7 @@ export const DoctorDashboard: React.FC = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
-  const todayStr = new Date().toLocaleDateString('en-CA');
+  const todayStr = colomboDateString();
   const todayAppointments = appointments.filter(
     (a) => a.startDateTime.startsWith(todayStr) && a.status === 'CONFIRMED'
   );
@@ -89,7 +90,7 @@ export const DoctorDashboard: React.FC = () => {
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-black text-navy-950">Today's Patient Schedule</h3>
             <span className="text-xs font-bold text-slate-400">
-              {new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' })}
+              {formatDate(new Date(), { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })}
             </span>
           </div>
 

@@ -29,8 +29,9 @@ public class DoctorController {
             @RequestParam(required = false) String departmentId,
             @RequestParam(required = false) String specialty,
             @RequestParam(required = false) String search,
-            @RequestParam(required = false, defaultValue = "true") Boolean activeOnly) {
-        return ResponseEntity.ok(doctorService.getAllDoctors(departmentId, specialty, search, activeOnly));
+            @RequestParam(required = false, defaultValue = "true") Boolean activeOnly,
+            @RequestParam(required = false) String hospitalId) {
+        return ResponseEntity.ok(doctorService.getAllDoctors(departmentId, specialty, search, activeOnly, hospitalId));
     }
 
     @GetMapping("/{id}")

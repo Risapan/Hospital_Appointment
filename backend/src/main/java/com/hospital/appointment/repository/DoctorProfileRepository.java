@@ -17,4 +17,7 @@ public interface DoctorProfileRepository extends MongoRepository<DoctorProfile, 
     List<DoctorProfile> findBySpecialtyContainingIgnoreCase(String specialty);
     List<DoctorProfile> findByActive(boolean active);
     long countByActive(boolean active);
+    // Matches doctors whose hospitalIds list contains the given id
+    long countByHospitalIdsAndActive(String hospitalId, boolean active);
+    List<DoctorProfile> findByHospitalIds(String hospitalId);
 }

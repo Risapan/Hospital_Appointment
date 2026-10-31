@@ -24,6 +24,8 @@ public class AppointmentRequest {
 
     // Optional: for receptionists / admins booking on behalf of another patient
     private String patientId;
+    // Hospital the patient chose; must be one of the doctor's hospitals
+    private String hospitalId;
 
     public AppointmentRequest() {}
 
@@ -44,4 +46,7 @@ public class AppointmentRequest {
 
     public String getPatientId() { return patientId; }
     public void setPatientId(String patientId) { this.patientId = patientId; }
+
+    public String getHospitalId() { return hospitalId; }
+    public void setHospitalId(String hospitalId) { this.hospitalId = hospitalId; }
 }

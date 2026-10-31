@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { HistoryNav } from '../common/HistoryNav';
 import { useAuth } from '../../contexts/AuthContext';
 import { notificationService } from '../../services/notificationService';
 import { Activity, Bell, User, LogOut, LayoutDashboard, Calendar, Menu, X, Shield, Stethoscope, UserCheck } from 'lucide-react';
@@ -48,6 +49,8 @@ export const Navbar: React.FC = () => {
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-18">
+          <div className="flex items-center gap-3">
+          <HistoryNav />
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group">
             <div className="w-10 h-10 rounded-xl bg-navy-900 text-teal-400 flex items-center justify-center shadow-md group-hover:bg-navy-800 transition-colors">
@@ -55,14 +58,23 @@ export const Navbar: React.FC = () => {
             </div>
             <div>
               <span className="text-xl font-black tracking-tight text-navy-950 flex items-center gap-1">
-                Care<span className="text-teal-600">Point</span>
+                East Care<span className="text-teal-600">Point</span>
               </span>
-              <span className="block text-[10px] font-semibold text-slate-400 tracking-wider uppercase -mt-1">Hospital System</span>
+              <span className="block text-[10px] font-semibold text-slate-400 tracking-wider uppercase -mt-1">Batticaloa Doctor Booking</span>
             </div>
           </Link>
+          </div>
 
           {/* Desktop Nav Links */}
           <nav className="hidden md:flex items-center gap-8">
+            <Link
+              to="/book"
+              className={`text-sm font-semibold transition-colors ${
+                location.pathname === '/book' ? 'text-teal-600' : 'text-slate-600 hover:text-navy-900'
+              }`}
+            >
+              Book
+            </Link>
             <Link
               to="/doctors"
               className={`text-sm font-semibold transition-colors ${
@@ -70,6 +82,14 @@ export const Navbar: React.FC = () => {
               }`}
             >
               Find Doctors
+            </Link>
+            <Link
+              to="/hospitals"
+              className={`text-sm font-semibold transition-colors ${
+                location.pathname.startsWith('/hospitals') ? 'text-teal-600' : 'text-slate-600 hover:text-navy-900'
+              }`}
+            >
+              Hospitals
             </Link>
             <Link
               to="/departments"
@@ -85,7 +105,7 @@ export const Navbar: React.FC = () => {
                 location.pathname === '/about' ? 'text-teal-600' : 'text-slate-600 hover:text-navy-900'
               }`}
             >
-              About CarePoint
+              About Us
             </Link>
           </nav>
 
@@ -196,7 +216,7 @@ export const Navbar: React.FC = () => {
                   Log in
                 </Link>
                 <Link
-                  to="/register"
+                  to="/book"
                   className="bg-navy-900 text-white text-sm font-bold px-4 py-2 rounded-xl hover:bg-navy-800 transition-colors shadow-sm"
                 >
                   Book Appointment
@@ -226,6 +246,20 @@ export const Navbar: React.FC = () => {
             className="block py-2 text-sm font-bold text-slate-700"
           >
             Find Doctors
+          </Link>
+          <Link
+            to="/book"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="block py-2 text-sm font-bold text-teal-700"
+          >
+            Book Appointment
+          </Link>
+          <Link
+            to="/hospitals"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="block py-2 text-sm font-bold text-slate-700"
+          >
+            Hospitals
           </Link>
           <Link
             to="/departments"

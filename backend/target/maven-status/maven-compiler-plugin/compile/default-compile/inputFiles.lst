@@ -6,6 +6,7 @@
 /Users/risapan/Documents/Web_App/Hospital_Appointment/backend/src/main/java/com/hospital/appointment/controller/DepartmentController.java
 /Users/risapan/Documents/Web_App/Hospital_Appointment/backend/src/main/java/com/hospital/appointment/controller/DoctorController.java
 /Users/risapan/Documents/Web_App/Hospital_Appointment/backend/src/main/java/com/hospital/appointment/controller/DoctorPortalController.java
+/Users/risapan/Documents/Web_App/Hospital_Appointment/backend/src/main/java/com/hospital/appointment/controller/HospitalController.java
 /Users/risapan/Documents/Web_App/Hospital_Appointment/backend/src/main/java/com/hospital/appointment/controller/NotificationController.java
 /Users/risapan/Documents/Web_App/Hospital_Appointment/backend/src/main/java/com/hospital/appointment/controller/PatientController.java
 /Users/risapan/Documents/Web_App/Hospital_Appointment/backend/src/main/java/com/hospital/appointment/controller/ReceptionistController.java
@@ -20,6 +21,7 @@
 /Users/risapan/Documents/Web_App/Hospital_Appointment/backend/src/main/java/com/hospital/appointment/dto/DashboardStatsDto.java
 /Users/risapan/Documents/Web_App/Hospital_Appointment/backend/src/main/java/com/hospital/appointment/dto/DepartmentDto.java
 /Users/risapan/Documents/Web_App/Hospital_Appointment/backend/src/main/java/com/hospital/appointment/dto/DoctorDto.java
+/Users/risapan/Documents/Web_App/Hospital_Appointment/backend/src/main/java/com/hospital/appointment/dto/HospitalDto.java
 /Users/risapan/Documents/Web_App/Hospital_Appointment/backend/src/main/java/com/hospital/appointment/dto/PatientProfileDto.java
 /Users/risapan/Documents/Web_App/Hospital_Appointment/backend/src/main/java/com/hospital/appointment/dto/RegisterRequest.java
 /Users/risapan/Documents/Web_App/Hospital_Appointment/backend/src/main/java/com/hospital/appointment/dto/RescheduleRequest.java
@@ -39,6 +41,7 @@
 /Users/risapan/Documents/Web_App/Hospital_Appointment/backend/src/main/java/com/hospital/appointment/model/BlockedPeriod.java
 /Users/risapan/Documents/Web_App/Hospital_Appointment/backend/src/main/java/com/hospital/appointment/model/Department.java
 /Users/risapan/Documents/Web_App/Hospital_Appointment/backend/src/main/java/com/hospital/appointment/model/DoctorProfile.java
+/Users/risapan/Documents/Web_App/Hospital_Appointment/backend/src/main/java/com/hospital/appointment/model/Hospital.java
 /Users/risapan/Documents/Web_App/Hospital_Appointment/backend/src/main/java/com/hospital/appointment/model/Notification.java
 /Users/risapan/Documents/Web_App/Hospital_Appointment/backend/src/main/java/com/hospital/appointment/model/PatientProfile.java
 /Users/risapan/Documents/Web_App/Hospital_Appointment/backend/src/main/java/com/hospital/appointment/model/Role.java
@@ -49,6 +52,7 @@
 /Users/risapan/Documents/Web_App/Hospital_Appointment/backend/src/main/java/com/hospital/appointment/repository/BlockedPeriodRepository.java
 /Users/risapan/Documents/Web_App/Hospital_Appointment/backend/src/main/java/com/hospital/appointment/repository/DepartmentRepository.java
 /Users/risapan/Documents/Web_App/Hospital_Appointment/backend/src/main/java/com/hospital/appointment/repository/DoctorProfileRepository.java
+/Users/risapan/Documents/Web_App/Hospital_Appointment/backend/src/main/java/com/hospital/appointment/repository/HospitalRepository.java
 /Users/risapan/Documents/Web_App/Hospital_Appointment/backend/src/main/java/com/hospital/appointment/repository/NotificationRepository.java
 /Users/risapan/Documents/Web_App/Hospital_Appointment/backend/src/main/java/com/hospital/appointment/repository/PatientProfileRepository.java
 /Users/risapan/Documents/Web_App/Hospital_Appointment/backend/src/main/java/com/hospital/appointment/repository/UserRepository.java
@@ -64,4 +68,5 @@
 /Users/risapan/Documents/Web_App/Hospital_Appointment/backend/src/main/java/com/hospital/appointment/service/DashboardService.java
 /Users/risapan/Documents/Web_App/Hospital_Appointment/backend/src/main/java/com/hospital/appointment/service/DepartmentService.java
 /Users/risapan/Documents/Web_App/Hospital_Appointment/backend/src/main/java/com/hospital/appointment/service/DoctorService.java
+/Users/risapan/Documents/Web_App/Hospital_Appointment/backend/src/main/java/com/hospital/appointment/service/HospitalService.java
 /Users/risapan/Documents/Web_App/Hospital_Appointment/backend/src/main/java/com/hospital/appointment/service/NotificationService.java

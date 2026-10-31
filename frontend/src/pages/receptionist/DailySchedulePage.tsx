@@ -5,10 +5,11 @@ import { DashboardLayout } from '../../components/layout/DashboardLayout';
 import { Badge } from '../../components/common/Badge';
 import { LoadingSpinner } from '../../components/common/LoadingSpinner';
 import { Calendar, Clock, MapPin, Printer } from 'lucide-react';
+import { colomboDateString, formatTime } from '../../utils/format';
 
 export const DailySchedulePage: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<string>(
-    new Date().toLocaleDateString('en-CA')
+    colomboDateString()
   );
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -72,7 +73,7 @@ export const DailySchedulePage: React.FC = () => {
                     <tr key={apt.id} className="hover:bg-slate-50/50">
                       <td className="py-4 px-6 whitespace-nowrap">
                         <span className="font-extrabold text-navy-950 text-sm block">
-                          {new Date(apt.startDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          {formatTime(apt.startDateTime)}
                         </span>
                         <span className="text-[10px] text-slate-400">30 min slot</span>
                       </td>
@@ -86,7 +87,7 @@ export const DailySchedulePage: React.FC = () => {
                       </td>
                       <td className="py-4 px-6">
                         <span className="text-slate-600 font-semibold">
-                          {apt.roomNumber ? `Suite ${apt.roomNumber}` : 'General OPD'}
+                          {apt.roomNumber ? apt.roomNumber : 'General OPD'}
                         </span>
                       </td>
                       <td className="py-4 px-6 max-w-xs truncate">{apt.reasonForVisit}</td>

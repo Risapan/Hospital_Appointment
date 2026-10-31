@@ -154,7 +154,7 @@ export const PatientProfilePage: React.FC = () => {
                   type="text"
                   value={profile.emergencyContactName || ''}
                   onChange={(e) => setProfile({ ...profile, emergencyContactName: e.target.value })}
-                  placeholder="e.g. Mary Miller (Spouse)"
+                  placeholder="e.g. Dilani Jayawardena (Spouse)"
                   className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
                 />
               </div>
@@ -176,7 +176,7 @@ export const PatientProfilePage: React.FC = () => {
                   type="text"
                   value={profile.address || ''}
                   onChange={(e) => setProfile({ ...profile, address: e.target.value })}
-                  placeholder="Street address, City, State, Zip"
+                  placeholder="No. 25, Galle Road, Colombo 03"
                   className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-navy-900"
                 />
               </div>

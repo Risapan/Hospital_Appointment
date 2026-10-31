@@ -20,6 +20,11 @@ public class AppointmentResponse {
     private String departmentId;
     private String departmentName;
 
+    private String hospitalId;
+    private String hospitalName;
+    private String hospitalAddress;
+    private String hospitalPhone;
+
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
     private AppointmentStatus status;
@@ -97,4 +102,16 @@ public class AppointmentResponse {
 
     public Instant getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(Instant updatedAt) { this.updatedAt = updatedAt; }
+
+    public String getHospitalId() { return hospitalId; }
+    public void setHospitalId(String hospitalId) { this.hospitalId = hospitalId; }
+
+    public String getHospitalName() { return hospitalName; }
+    public void setHospitalName(String hospitalName) { this.hospitalName = hospitalName; }
+
+    public String getHospitalAddress() { return hospitalAddress; }
+    public void setHospitalAddress(String hospitalAddress) { this.hospitalAddress = hospitalAddress; }
+
+    public String getHospitalPhone() { return hospitalPhone; }
+    public void setHospitalPhone(String hospitalPhone) { this.hospitalPhone = hospitalPhone; }
 }

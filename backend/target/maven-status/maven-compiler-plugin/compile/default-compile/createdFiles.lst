@@ -32,7 +32,9 @@ com/hospital/appointment/model/Availability.class
 com/hospital/appointment/model/BlockedPeriod.class
 com/hospital/appointment/controller/AppointmentController.class
 com/hospital/appointment/controller/AdminController.class
+com/hospital/appointment/repository/HospitalRepository.class
 com/hospital/appointment/controller/DoctorController.class
+com/hospital/appointment/dto/HospitalDto.class
 com/hospital/appointment/repository/UserRepository.class
 com/hospital/appointment/security/JwtUtils.class
 com/hospital/appointment/controller/DoctorPortalController.class
@@ -49,9 +51,13 @@ com/hospital/appointment/dto/AuthResponse$UserSummaryDto.class
 com/hospital/appointment/AppointmentApplication.class
 com/hospital/appointment/model/Department.class
 com/hospital/appointment/exception/GlobalExceptionHandler.class
+com/hospital/appointment/controller/HospitalController.class
 com/hospital/appointment/controller/NotificationController.class
+com/hospital/appointment/service/HospitalService.class
 com/hospital/appointment/dto/PatientProfileDto.class
 com/hospital/appointment/security/UserDetailsServiceImpl.class
+com/hospital/appointment/dto/DoctorDto$HospitalSummary.class
+com/hospital/appointment/model/Hospital.class
 com/hospital/appointment/dto/UserDto.class
 com/hospital/appointment/model/Appointment.class
 com/hospital/appointment/service/AvailabilityService.class

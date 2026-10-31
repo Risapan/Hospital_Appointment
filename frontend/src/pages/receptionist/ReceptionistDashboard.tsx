@@ -8,6 +8,7 @@ import { Button } from '../../components/common/Button';
 import { LoadingSpinner } from '../../components/common/LoadingSpinner';
 import { Badge } from '../../components/common/Badge';
 import { Calendar, Users, UserPlus, Clock, Search, ArrowRight } from 'lucide-react';
+import { formatTime } from '../../utils/format';
 
 export const ReceptionistDashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -115,7 +116,7 @@ export const ReceptionistDashboard: React.FC = () => {
                   {todayAppointments.map((apt) => (
                     <tr key={apt.id} className="hover:bg-slate-50/50">
                       <td className="py-3 px-4 font-bold text-navy-950 whitespace-nowrap">
-                        {new Date(apt.startDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        {formatTime(apt.startDateTime)}
                       </td>
                       <td className="py-3 px-4">
                         <span className="font-extrabold text-navy-950 block">{apt.patientName}</span>

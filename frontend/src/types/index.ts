@@ -18,6 +18,13 @@ export interface AuthResponse {
   user: UserSummary;
 }
 
+export interface DoctorHospital {
+  id: string;
+  name: string;
+  sector?: string;
+  address?: string;
+}
+
 export interface Doctor {
   id: string; // DoctorProfile ID
   userId: string;
@@ -29,7 +36,9 @@ export interface Doctor {
   specialty: string;
   biography?: string;
   qualifications?: string;
-  hospitalName?: string;
+  hospitalIds: string[];
+  hospitals: DoctorHospital[];
+  hospitalName?: string; // all hospital names joined, for display
   hospitalType?: string;
   consultationDurationMinutes: number;
   consultationFee: number;
@@ -37,6 +46,24 @@ export interface Doctor {
   experienceYears: number;
   roomNumber?: string;
   active: boolean;
+}
+
+export interface Hospital {
+  id: string;
+  name: string;
+  type?: string;     // "Hospital", "Dental Clinic", ...
+  sector?: string;   // "Private" | "Government"
+  address?: string;
+  city?: string;
+  phone?: string;
+  whatsapp?: string;
+  email?: string;
+  website?: string;
+  mapUrl?: string;
+  description?: string;
+  services: string[];
+  active: boolean;
+  doctorCount: number;
 }
 
 export interface Department {
@@ -85,6 +112,10 @@ export interface Appointment {
   roomNumber?: string;
   departmentId: string;
   departmentName: string;
+  hospitalId?: string;
+  hospitalName?: string;
+  hospitalAddress?: string;
+  hospitalPhone?: string;
   startDateTime: string;
   endDateTime: string;
   status: AppointmentStatus;

@@ -5,6 +5,7 @@ import { DashboardLayout } from '../../components/layout/DashboardLayout';
 import { Button } from '../../components/common/Button';
 import { LoadingSpinner } from '../../components/common/LoadingSpinner';
 import { Clock, Plus, Trash2, CalendarOff, CheckCircle2, AlertCircle } from 'lucide-react';
+import { formatDateTime } from '../../utils/format';
 
 export const DoctorSchedulePage: React.FC = () => {
   const [schedules, setSchedules] = useState<Availability[]>([]);
@@ -287,7 +288,7 @@ export const DoctorSchedulePage: React.FC = () => {
                       <span className="font-bold text-navy-950">{bp.reasonCategory}</span>
                       {bp.reasonNote && <span className="text-slate-500 ml-2">({bp.reasonNote})</span>}
                       <p className="text-[11px] text-slate-400 mt-0.5">
-                        {new Date(bp.startDateTime).toLocaleString()} — {new Date(bp.endDateTime).toLocaleString()}
+                        {formatDateTime(bp.startDateTime)} — {formatDateTime(bp.endDateTime)}
                       </p>
                     </div>
 
