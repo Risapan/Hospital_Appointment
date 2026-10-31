@@ -141,13 +141,13 @@ export const LoginPage: React.FC = () => {
 
             <button
               type="button"
-              onClick={() => handleQuickLogin('chaminda.perera@hospital.lk', 'doctor123')}
+              onClick={() => handleQuickLogin('thirukumar.v@hospital.lk', 'doctor123')}
               className="p-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-left flex items-center gap-2 transition-colors"
             >
               <Stethoscope className="w-3.5 h-3.5 text-indigo-600" />
               <div>
                 <span className="font-bold block text-navy-950 text-[11px]">Doctor</span>
-                <span className="text-[10px] text-slate-400 block -mt-0.5">Dr. Chaminda Perera</span>
+                <span className="text-[10px] text-slate-400 block -mt-0.5">Prof. V. Thirukumar</span>
               </div>
             </button>
 

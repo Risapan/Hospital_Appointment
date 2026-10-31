@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Backend (Spring Boot)",
+      "request": "launch",
+      "mainClass": "com.hospital.appointment.AppointmentApplication",
+      "projectName": "hospital-appointment-backend",
+      "cwd": "${workspaceFolder}/backend"
+    }
+  ]
+}
