@@ -27,17 +27,44 @@ The system is split into four distinct roles to keep things organized:
 
 ## Getting Started
 
-### Backend Setup
-1. Make sure you have **Java 17+** and **Maven** installed.
+### Run everything with Docker (recommended)
+The only requirement is **Docker Desktop**. One command builds and starts MongoDB, the Spring Boot backend and the React frontend:
+
+```bash
+cp .env.example .env          # optional: change ports, passwords and the JWT secret
+docker compose up -d --build
+```
+
+| Service  | Container           | URL                                   |
+|----------|---------------------|---------------------------------------|
+| Frontend | `hospital_frontend` | http://localhost:5174                 |
+| Backend  | `hospital_backend`  | http://localhost:8081/api             |
+| MongoDB  | `hospital_mongo`    | `mongodb://hospital:hospital_pass@localhost:27018/?authSource=admin` (Compass) |
+
+Containers start in order: MongoDB, then the backend once MongoDB is healthy, then the frontend once the backend is healthy. The frontend's nginx proxies `/api` to the backend, so the browser talks to one origin. Data is kept in the `mongo_data` volume.
+
+Demo accounts are created on first start: `admin@hospital.lk` / `admin123`, `receptionist@hospital.lk` / `receptionist123`, `patient@hospital.lk` / `patient123`, and doctors with password `doctor123`.
+
+```bash
+docker compose ps             # status and health
+docker compose logs -f backend
+docker compose down           # stop (keeps data)
+docker compose down -v        # stop and delete the database
+```
+
+The MongoDB username and password are applied only when the `mongo_data` volume is first created. After changing them in `.env`, run `docker compose down -v` once.
+
+### Backend Setup (without Docker)
+1. Make sure you have **Java 21** and **Maven** installed.
 2. Ensure **MongoDB** is running locally on port 27017.
 3. Navigate to the backend folder:
    ```bash
    cd backend
    mvn spring-boot:run
    ```
-The server will start on `http://localhost:8080`.
+The server will start on `http://localhost:8081`.
 
-### Frontend Setup
+### Frontend Setup (without Docker)
 1. Make sure you have **Node.js** installed.
 2. Navigate to the frontend folder:
    ```bash
@@ -45,7 +72,7 @@ The server will start on `http://localhost:8080`.
    npm install
    npm run dev
    ```
-The app will be available at `http://localhost:5173`.
+The app will be available at `http://localhost:5174`.
 
 ## Project Structure
 - `/backend`: Contains the Spring Boot source code, security configs, and MongoDB models.
