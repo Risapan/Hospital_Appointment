@@ -285,9 +285,16 @@ public class AppointmentService {
             throw new BadRequestException("Cancelled appointments cannot be rescheduled. Please book a new appointment.");
         }
 
+        // DEF-03: a finished visit cannot be moved back onto the calendar
+        if (apt.getStatus() == AppointmentStatus.COMPLETED || apt.getStatus() == AppointmentStatus.NO_SHOW) {
+            throw new BadRequestException("Completed or no-show appointments cannot be rescheduled.");
+        }
+
         if (currentUser.getRole() == Role.PATIENT && !apt.getPatientId().equals(currentUser.getId())) {
             throw new UnauthorizedException("You are not authorized to reschedule this appointment");
         }
+        // DEF-03: doctors may only reschedule their own appointments
+        requireDoctorOwnsAppointment(apt, currentUser, "You are not authorized to reschedule this appointment");
 
         LocalDateTime newStart = request.getNewStartDateTime();
         if (newStart.isBefore(LocalDateTime.now())) {
@@ -342,6 +349,9 @@ public class AppointmentService {
         Appointment apt = appointmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Appointment not found with id: " + id));
 
+        // DEF-01: a doctor may only change the status of their own appointments (admins may change any)
+        requireDoctorOwnsAppointment(apt, currentUser, "You can only update the status of your own appointments");
+
         apt.setStatus(request.getStatus());
         if (request.getDoctorNotes() != null) {
             apt.setDoctorNotes(request.getDoctorNotes());
@@ -368,6 +378,16 @@ public class AppointmentService {
         );
 
         return enrichSingle(saved);
+    }
+
+    private void requireDoctorOwnsAppointment(Appointment apt, UserDetailsImpl currentUser, String message) {
+        if (currentUser.getRole() != Role.DOCTOR) {
+            return;
+        }
+        DoctorProfile dp = doctorProfileRepository.findByUserId(currentUser.getId()).orElse(null);
+        if (dp == null || !apt.getDoctorId().equals(dp.getId())) {
+            throw new UnauthorizedException(message);
+        }
     }
 
     public List<AppointmentResponse> getDoctorAppointments(String doctorId) {
