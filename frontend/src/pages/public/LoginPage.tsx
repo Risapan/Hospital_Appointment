@@ -45,7 +45,7 @@ export const LoginPage: React.FC = () => {
         }
       }, 100);
     } catch (err: any) {
-      setError(err.response?.data?.message || (err.response?.status === 401 ? 'Invalid email or password.' : 'Cannot reach the server. Is the backend running on port 8080?'));
+      setError(err.response?.data?.message || (err.response?.status === 401 ? 'Invalid email or password.' : 'Cannot reach the server. Is the backend running on port 8081?'));
     } finally {
       setIsLoading(false);
     }

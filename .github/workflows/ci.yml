@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  backend:
+    name: Backend tests (JUnit, REST Assured, Cucumber) + coverage
+    runs-on: ubuntu-latest
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+    services:
+      mongo:
+        image: mongo:7
+        ports: ["27017:27017"]
+        options: >-
+          --health-cmd "mongosh --quiet --eval 'db.adminCommand({ping:1}).ok'"
+          --health-interval 10s --health-timeout 5s --health-retries 10
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # SonarQube needs full history for blame data
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+      - name: Run tests
+        run: mvn -B verify
+      - name: Test summary
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import glob, xml.etree.ElementTree as ET
+          t=f=e=s=0
+          for p in glob.glob("target/surefire-reports/TEST-*.xml"):
+              r=ET.parse(p).getroot(); t+=int(r.get("tests"));f+=int(r.get("failures"));e+=int(r.get("errors"));s+=int(r.get("skipped"))
+          line=f"Tests: {t}  Failures: {f}  Errors: {e}  Skipped: {s}"
+          print(line); open(__import__("os").environ["GITHUB_STEP_SUMMARY"],"a").write("### "+line+"\n")
+          PY
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-test-reports
+          path: |
+            backend/target/surefire-reports/
+            backend/target/site/jacoco/
+            backend/target/cucumber-report.html
+      - name: SonarQube scan
+        # Runs only when the repository has SONAR_TOKEN and SONAR_HOST_URL secrets configured
+        if: ${{ env.SONAR_TOKEN != '' }}
+        run: mvn -B sonar:sonar -Dsonar.host.url="$SONAR_HOST_URL" -Dsonar.token="$SONAR_TOKEN"
+
+  frontend:
+    name: Frontend type-check + build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run build

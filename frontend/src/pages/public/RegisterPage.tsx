@@ -42,7 +42,7 @@ export const RegisterPage: React.FC = () => {
       });
       navigate('/patient/dashboard');
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Cannot reach the server. Is the backend running on port 8080?');
+      setError(err.response?.data?.message || 'Cannot reach the server. Is the backend running on port 8081?');
     } finally {
       setIsLoading(false);
     }

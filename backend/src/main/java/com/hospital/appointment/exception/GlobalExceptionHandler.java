@@ -9,7 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.AccountStatusException;
 import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -62,8 +64,10 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler(DisabledException.class)
-    public ResponseEntity<ApiErrorResponse> handleDisabled(DisabledException ex) {
+    // DEF-08: UserDetailsImpl reports an inactive user as both locked and disabled, and Spring checks
+    // "locked" first, so a deactivated account raises LockedException. Map both to the same 401.
+    @ExceptionHandler({DisabledException.class, LockedException.class})
+    public ResponseEntity<ApiErrorResponse> handleDisabled(AccountStatusException ex) {
         ApiErrorResponse error = new ApiErrorResponse("ACCOUNT_DISABLED", "This account has been deactivated.", HttpStatus.UNAUTHORIZED.value());
         return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }

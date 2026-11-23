@@ -69,6 +69,10 @@ public class JwtUtils {
             logger.error("JWT token is unsupported: {}", e.getMessage());
         } catch (IllegalArgumentException e) {
             logger.error("JWT claims string is empty: {}", e.getMessage());
+        } catch (io.jsonwebtoken.JwtException e) {
+            // DEF-07: covers SignatureException (token signed with another key) and any other JWT failure,
+            // which previously escaped and turned /api/auth/refresh into an HTTP 500
+            logger.error("JWT token rejected: {}", e.getMessage());
         }
         return false;
     }
